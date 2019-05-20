@@ -8,9 +8,9 @@ Daarom wil ik een kijkje nemen in de wereld van electra. Ten eerste wil ik weten
 
 source: https://opendata.cbs.nl/statline/#/CBS/nl/navigatieScherm/zoeken?searchKeywords=Elektriciteit
 
-###vraag: Waarom stijgen de prijzen van electra?
-####sub vraag: welke sectoren verbruiken het meest
-####sub vraag: uit welke bronnen bestaat nederlandse energie
+### vraag: Waarom stijgen de prijzen van electra?
+#### sub vraag: welke sectoren verbruiken het meest
+#### sub vraag: uit welke bronnen bestaat nederlandse energie
 
 Het idee is dat ik herkomsten (per land en bron) en verbruik (per industrie) van electrisiteit in kaart breng. Over meerdere jaren.
 
