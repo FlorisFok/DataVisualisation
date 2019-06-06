@@ -36,5 +36,5 @@ For the visualisation part I'm using the D3 Libarie. A few pieces of code will f
 * [Tide tree](https://observablehq.com/@d3/tidy-tree)
 * [Calander view](http://bl.ocks.org/oyyd/859fafc8122977a3afd6)
 
-![Screenshot](CAPTURE.png)
+![ExamplePage](Capture.PNG)
 
