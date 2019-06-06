@@ -1,0 +1,79 @@
+body {
+  height: 100%;
+  width: 100%;
+}
+main{
+  background-image: url("https://media3.giphy.com/media/l46Cq3dy04lgkRVOE/giphy.gif?cid=790b76115cf8c444345033316b17fb34&rid=giphy.gif");
+}
+
+h1{
+  display:inline-block;
+  background-color: #ffffff;
+}
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    color: initial;
+    display:inline-block;
+    background-color: #ffff00;
+}
+
+.home{
+  height: 450px;
+}
+
+p{
+  display:inline-block;
+  background-color: #ffffff;
+}
+.center{
+  padding:50px;
+}
+
+
+
+
+
+
+/* Styles for the heatmap */
+.days-hours-heatmap{
+  padding: 0px 0 20px 0;
+  width: 100px;
+  margin: 0 auto;}
+.days-hours-heatmap .calibration{
+  margin-bottom:
+  15px;width:100px;
+}
+.days-hours-heatmap .calibration .group{
+  display: inline-block;
+}
+.days-hours-heatmap .calibration .description{
+  width:108px;
+}
+.days-hours-heatmap .calibration>.display-control{
+  float:right;
+}
+.days-hours-heatmap .calibration>.display-control label{
+  vertical-align: top;
+}
+.days-hours-heatmap .calibration>.display-control input[type='radio']{
+  cursor: pointer;
+}
+
+.days-hours-heatmap .heatmap .axis path{
+  display: none;
+}
+.days-hours-heatmap .heatmap .axis line{
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.days-hours-heatmap .heatmap .axis text{
+  font-size: 9px;
+}
+.description{
+  font-size: 10px;
+}
