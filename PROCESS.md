@@ -15,3 +15,10 @@ Hackethon in Eindhoven
 * Start with the first two visualisation.
 * Learning bootstraps again.
 * Cutting the Caladar in 7 days. 
+* First succesful docker run of flask app.
+* 3 hours of failing in Apache en reinstalling the linux server
+
+# day 5
+* First sign of the amsterdam map
+* Interactive labels on the map
+* Frist two  visualisations are running --> presented them at the meeting
