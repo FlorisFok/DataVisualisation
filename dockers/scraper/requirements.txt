@@ -2,3 +2,4 @@ timeloop
 bs4
 requests
 mysql
+mysql-connector
