@@ -117,6 +117,8 @@ def save(e, file):
         except Exception as x:
             print(x, call)
             break
+           
+    conn.commit()
 
 tl = Timeloop()
 
