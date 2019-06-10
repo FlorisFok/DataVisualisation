@@ -49,7 +49,7 @@
     .attr('transform','translate('+margin.left+','+margin.top+')');
   var rect = null;
 
-  d3.json('pm7.json',function(err,data){
+  d3.json('../data/pm7.json',function(err,data){
     data = data.data;
     console.log(data)
     data.forEach(function(valueObj){

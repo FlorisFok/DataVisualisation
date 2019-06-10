@@ -10,10 +10,11 @@
         <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="../static/styles.css" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
 
         <title>Roqeust</title>
 
@@ -27,9 +28,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav mr-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/viz.html">Rooms</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/cal.html">Calculator</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/raw.html">Raw data</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages//viz.html">Rooms</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages//cal.html">Calculator</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages//raw.html">Raw data</a></li>
                         <li class="nav-item"><a class="nav-link" href="/sell">API</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto mt-2">
@@ -38,17 +39,78 @@
             </div>
         </nav>
 
-        <main class="container p-5">
+        <con class="container p-5">
           <div class="home">
-            lololo
+            <svg width="400" height="400" id="map"></svg>
           </div>
+          <script>
+            // JSON data
+            var nodeData = {
+                "name": "TOPICS", "children": [{
+                    "name": "Topic A",
+                    "children": [{"name": "Sub A1", "size": 4}, {"name": "Sub A2", "size": 4}]
+                }, {
+                    "name": "Topic B",
+                    "children": [{"name": "Sub B1", "size": 3}, {"name": "Sub B2", "size": 3}, {
+                        "name": "Sub B3", "size": 3}]
+                }, {
+                    "name": "Topic C",
+                    "children": [{"name": "Sub A1", "size": 4}, {"name": "Sub A2", "size": 4}]
+                }]
+            };
+
+            // Variables
+            var svg = d3.select("#map"),
+                width = +svg.attr("width"),
+                height = +svg.attr("height");
+
+            var radius = Math.min(width, height) / 2;
+            var color = d3.scaleOrdinal(d3.schemeCategory20b);
+
+            // Create primary <g> element
+            var g = svg.append('g')
+                        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+            // Data strucure
+            var partition = d3.partition()
+                .size([2 * Math.PI, radius]);
+
+            // Find data root
+            var root = d3.hierarchy(nodeData)
+                .sum(function (d) { return d.size});
+
+            // Size arcs
+            partition(root);
+            var arc = d3.arc()
+                .startAngle(function (d) { return d.x0 })
+                .endAngle(function (d) { return d.x1 })
+                .innerRadius(function (d) { return d.y0 })
+                .outerRadius(function (d) { return d.y1 });
+
+            g.append("text")
+              .attr("class", "label")
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("text-anchor", 'middle')
+              .text("test");
+
+            // Put it all together
+            g.selectAll('path')
+                .data(root.descendants())
+                .enter().append('path')
+                .attr("display", function (d) { return d.depth ? null : "none"; })
+                .attr("d", arc)
+                .style('stroke', '#fff')
+                .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); })
+                .on("mouseover", function (d) { document.querySelector(".label").innerHTML =
+                                                `${d.data.name}`
+                                                console.log(d)
+                                              });
+          </script>
           <footer class="small text-center text-muted">
               <p>Data from <a href="https://kamernet.nl">kamernet</a>.</p>
           </footer>
-        </main>
-        <div class="bottom_text">
-
-        </div>
+        </con>
     </body>
 
 </html>
