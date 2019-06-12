@@ -9,6 +9,7 @@ from mysql.connector import Error
 import pickle
 import json
 import lxml
+import os
 
 def connect():
     """
@@ -95,7 +96,8 @@ def latlon_by_term(searchterm):
 
 def save(e, file):
 
-    streetdict = pickle.load( open( "streets2Latlon_dict.p", "rb" ) )
+    cwd = os.getcwd()
+    streetdict = pickle.load( open( cwd+"\\streets2Latlon_dict.p", "rb" ) )
     conn = connect()
     mycursor = conn.cursor()
 
