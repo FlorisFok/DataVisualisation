@@ -2,4 +2,4 @@ timeloop
 bs4
 requests
 mysql
-pickle
+pickle-mixin
