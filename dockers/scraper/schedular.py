@@ -96,6 +96,7 @@ def latlon_by_term(searchterm):
 
 def save(e, file):
 
+    print(os.listdir())
     cwd = os.getcwd()
     streetdict = pickle.load( open( cwd+"/streets2Latlon_dict.p", "rb" ) )
     conn = connect()
