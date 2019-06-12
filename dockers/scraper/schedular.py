@@ -8,6 +8,7 @@ import mysql.connector
 from mysql.connector import Error
 import pickle
 import json
+import lxml
 
 def connect():
     """

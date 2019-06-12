@@ -3,3 +3,4 @@ bs4
 requests
 mysql-connector
 pickle-mixin
+lxml
