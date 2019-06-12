@@ -2,13 +2,14 @@ from flask import Flask, jsonify, request
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 import mysql.connector
 from mysql.connector import Error
-import random
 import json
 
 
 app = Flask(__name__)
 app.config['REVERSE_PROXY_PATH'] = '/foo'
 ReverseProxyPrefixFix(app)
+
+CENTER = (52.367612, 4.893884)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -42,10 +43,51 @@ def roll_dice(column):
 
     return jsonify({"data": new_data}), 200
 
+@app.route('/where/<commands>', methods=["GET"])
+def where_command(commands):
+
+    commands = commands.split('+')
+    commands = [i.replace('+', '>').replace('-', '<')
+                for i in commands if i != '']
+    data = get_where_json(commands)
+
+    return jsonify({"data": data}), 200
+
+@app.route('/loc/<range>/<commands>', methods=["GET"])
+def location(range, commands):
+
+    commands = commands.split('+')
+    commands = [i.replace('+', '>').replace('-', '<')
+                for i in commands if i != '']
+    data = get_where_json(commands)
+
+    new_data = []
+    for piece in data:
+        dinstance = ((abs(piece['lat'] - CENTER[0]))**2 + (abs(piece['lon']-CENTER[1]))**2)**0.5
+        if (int(range) > dinstance*111):
+            new_data.append(piece)
+
+    return jsonify({"data": new_data}), 200
+
 @app.route('/pien',methods=["GET"])
 def love_pien():
-    num = int(random.random()*(6))
-    return jsonify({"result":"Ik hou van je :)","name":"Floris"})
+    commands = 'price-550'
+    range = '4'
+    commands = commands.split('+')
+    commands = [i.replace('+', '>').replace('-', '<')
+                for i in commands if i != '']
+    data = get_where_json(commands)
+
+    new_data = []
+    for piece in data:
+        dinstance = ((abs(piece['lat'] - CENTER[0]))**2 + (abs(piece['lon']-CENTER[1]))**2)**0.5
+        if (int(range) > dinstance*111):
+            new_data.append(piece)
+
+    return jsonify({"data": new_data}), 200
+    return jsonify({"result":"Ik hou van je :)",
+                    "name":"Floris",
+                    'data': get_where_json("price<550")})
 
 def connect():
     """ Connect to MySQL database """
@@ -62,11 +104,31 @@ def connect():
 
     return conn
 
-def get_full_json():
+def get_full_json(col = '*'):
     conn = connect()
     mycursor = conn.cursor()
-    mycursor.execute('''SELECT * FROM tasks''')
-    row_headers=[x[0] for x in mycursor.description] #this will extract row headers
+    mycursor.execute('''SELECT '''+ col +''' FROM kamernet''')
+    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
+    rv = mycursor.fetchall()
+    json_data=[]
+    for result in rv:
+        result = list(result)
+        result[2] = str(result[2])
+        result[3] = str(result[3])
+        json_data.append(dict(zip(row_headers,result)))
+    # j = json.dumps(json_data)
+    return json_data
+
+def get_where_json(commands):
+    conn = connect()
+    mycursor = conn.cursor()
+    call = '''SELECT * FROM kamernet'''
+    call = call + " WHERE"
+    for com in commands:
+        call = call + ' ' + com + ' AND'
+    call = call[:-4]
+    mycursor.execute(call)
+    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
     rv = mycursor.fetchall()
     json_data=[]
     for result in rv:
