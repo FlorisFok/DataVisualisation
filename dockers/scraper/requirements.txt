@@ -1,5 +1,5 @@
 timeloop
 bs4
 requests
-mysql
+MySQL-python
 pickle-mixin
