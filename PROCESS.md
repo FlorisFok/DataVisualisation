@@ -22,3 +22,18 @@ Hackethon in Eindhoven
 * First sign of the amsterdam map
 * Interactive labels on the map
 * Frist two  visualisations are running --> presented them at the meeting
+
+# Weekend 1
+* Reversed proxy is finally working
+* Hosted the first flask projects
+* Created a API and MYSQL
+
+# day 6 (2de pinkster)
+* Loaded the parsed data into the SQL database
+* Put the scraper in the docker and scheduled it daily
+* Made the api not only return hellow world, but also sql data
+
+# day 7
+* Made a street to langitude/longotude converter
+* mastering api request in js
+* leaning the basics of SQL again
