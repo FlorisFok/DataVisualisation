@@ -97,7 +97,7 @@ def latlon_by_term(searchterm):
 def save(e, file):
 
     cwd = os.getcwd()
-    streetdict = pickle.load( open( cwd+"\\streets2Latlon_dict.p", "rb" ) )
+    streetdict = pickle.load( open( cwd+"/streets2Latlon_dict.p", "rb" ) )
     conn = connect()
     mycursor = conn.cursor()
 
