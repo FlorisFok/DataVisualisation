@@ -6,6 +6,8 @@ import requests
 import datetime
 import mysql.connector
 from mysql.connector import Error
+import pickle
+import json
 
 def connect():
     """
@@ -24,18 +26,21 @@ def connect():
 
     return conn
 
-def make_insert(mycursor, loc , start_date , due_date , size , extra , url , price):
+def make_insert(mycursor, loc, start_date, due_date, size, url, price, lat, lon, maanden):
     """
     Insert data into database table of mysql
     """
-    call = "INSERT INTO tasks (loc, start_date, due_date, size, extra, url, price)"
-    call += " VALUES ('{}','{}','{}',{},'{}','{}',{});".format(loc ,
+    call = "INSERT INTO kamernet (loc, start_date, due_date, size, url, price, lat, lon, tijd)"
+    call += " VALUES ('{}','{}','{}',{},'{}','{}', {}, {}, {});".format(loc,
                                                                start_date,
                                                                due_date,
                                                                size,
-                                                               extra,
                                                                url,
-                                                               price)
+                                                               price,
+                                                               lat,
+                                                               lon,
+                                                               maanden
+                                                               )
     mycursor.execute(call)
     return call
 
@@ -63,7 +68,10 @@ def run():
 
         ads = soup.find_all('div', {'class':'tile-data'})
         for tiles in ads:
-            all_data.append(tiles.text)
+            url = tiles.find('a').attrs['href']
+            all_data.append(tiles.text+';'+ url)
+
+
         page += 1
         c = len(ads)
 
@@ -74,12 +82,21 @@ def run():
     file =  "data"+st+".p"
     return all_data, file
 
+
+def latlon_by_term(searchterm):
+    YOUR_APP_ID = "icnkexRkeE1jpTvEhi8G"
+    YOUR_APP_CODE = "b75GL1eDwQ11BAp6kO-jkA"
+    url = f"https://geocoder.api.here.com/6.2/geocode.json?app_id={YOUR_APP_ID}&app_code={YOUR_APP_CODE}&searchtext={searchterm.replace(' ','+')}"
+    response = requests.get(url)
+    d = json.loads(response.text)
+    lldict = d['Response']['View'][0]['Result'][0]['Location']['NavigationPosition'][0]
+    return lldict['Latitude'], lldict['Longitude']
+
 def save(e, file):
 
+    streetdict = pickle.load( open( "streets2Latlon_dict.p", "rb" ) )
     conn = connect()
     mycursor = conn.cursor()
-
-    data = {'loc':[],'price':[],'incl':[],'size':[],'gestof':[],'datum':[],'onbep':[], 't_left':[]}
 
     now = file[4:14].split('-')
     now = [int(i) for i in now]
@@ -87,45 +104,54 @@ def save(e, file):
 
     for single in e:
         try:
+            single, url = single.split(';')
             l = single.split('-')
             if 'Kamer' in l[2]:
                 l.pop(0)
 
-            data["loc"].append(''.join([i for i in l[0].strip() if not i.isdigit()]))
-            data["price"].append(int(''.join([i for i in l[1] if i.isdigit()])))
-            data["incl"].append(('incl' in l[2]))
+            loc = l[0].strip()[2:]
+            price = (int(''.join([i for i in l[1] if i.isdigit()])))
+            incl = (('incl' in l[2]))
 
             ind = (l[2].index('m2'))
-            data["size"].append(int(l[2][ind-3:ind-1].strip()))
+            size = (int(l[2][ind-3:ind-1].strip()))
 
-            data["gestof"].append(('gestoffeerd' in l[2]))
-            data["onbep"].append(('onbepaald' in l[5]))
+            if not 'Onbepaalde tijd' in single:
+                onbep = 0 ##
+            else:
+                onbep = -1
 
             then = '20' + l[4][1:3] +'-' + l[3] + "-" +l[2][-2:]
-            data["datum"].append(then)
-            data['t_left'].append(cal_t_left(then, now))
+            street = loc[:-9]+ " Amsterdam Netherlands"
+            try:
+                lat = streetdict[street][0]
+                lon = streetdict[street][1]
+            except:
+                lat, lon = latlon_by_term(street)
+                print(lat, lon)
 
-            call = make_insert(mycursor,
-                        data["loc"][-1],
-                        scrape_date+' '+file[15:-2].replace('_', ':'),
-                        then,
-                        data["size"][-1],
-                        data["incl"][-1],
-                        'empty',
-                        data["price"][-1]\
-                       )
+            call = make_insert(mycursor,loc,
+                            scrape_date+' '+file[15:-2].replace('_', ':'),
+                            then,
+                            size,
+                            url,
+                            price,
+                            lat,
+                            lon,
+                            onbep
+                           )
         except Exception as x:
-            print(x, call)
-            break
-           
+            print(x)
     conn.commit()
 
 tl = Timeloop()
 
-@tl.job(interval=timedelta(hours=24))
+@tl.job(interval=timedelta(hours=1))
 def sample_job_every_5s():
     all_data, file = run()
     save(all_data, file)
 
 if __name__ == "__main__":
+    all_data, file = run()
+    save(all_data, file)
     tl.start(block=True)
