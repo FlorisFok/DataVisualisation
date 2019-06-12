@@ -96,9 +96,8 @@ def latlon_by_term(searchterm):
 
 def save(e, file):
 
-    print(os.listdir())
-    cwd = os.getcwd()
-    streetdict = pickle.load( open( cwd+"/streets2Latlon_dict.p", "rb" ) )
+    with open('person.txt') as json_file:
+        streetdict = json.load(json_file)
     conn = connect()
     mycursor = conn.cursor()
 
