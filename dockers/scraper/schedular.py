@@ -46,6 +46,17 @@ def make_insert(mycursor, loc, start_date, due_date, size, url, price, lat, lon,
     mycursor.execute(call)
     return call
 
+def save_log(mycursor, count):
+    """
+    Insert data into database table of mysql
+    """
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    call = "INSERT INTO kamernet_log (count, date)"
+    call += " VALUES ({},'{}');".format(count, st)
+    mycursor.execute(call)
+    return call
+
 def cal_t_left(then, now):
     '''
     Calculate time differnence
@@ -105,6 +116,7 @@ def save(e, file):
     now = [int(i) for i in now]
     scrape_date = file[4:14]
 
+    new = 0
     for single in e:
         try:
             single, url = single.split(';')
@@ -141,10 +153,13 @@ def save(e, file):
                             price,
                             lat,
                             lon,
-                            onbep
-                           )
+                            onbep)
+            new += 1
+
         except Exception as x:
             print(x)
+
+    save_log(mycursor, new)
     conn.commit()
 
 tl = Timeloop()
