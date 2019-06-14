@@ -48,7 +48,9 @@ var spacingx = 55
 //   .text("Kamers");
 
 function colorPath(d) {
-  g.selectAll('path').style('fill', 'grey')
+  let g = d3.select('.sun')
+  g.selectAll('#grey').style('fill', 'grey')
+
   if (d.depth == 3){
     document.querySelector("#sunpath").innerHTML =
    `${d.parent.parent.data.name} -->
@@ -59,6 +61,7 @@ function colorPath(d) {
    document.querySelector(`.${d.data.name.replace(/ /g,".")}`).style = "fill: red;"
   }
   else if (d.depth == 2){
+    console.log(d.parent.data.name.replace(/ /g,"."))
     document.querySelector("#sunpath").innerHTML =
    `${d.parent.data.name}
    --> ${d.data.name}`
@@ -87,18 +90,25 @@ function inside_poly(point, pol) {
     return inside;
 };
 
+
+
 d3.queue()
     .defer(d3.json, "../data/GEBIED_BUURTEN.json")
-    .defer(d3.json, "../data/apidata2.json")
+    .defer(d3.json, "/data/GEBIED_STADSDELEN.json")
+    .defer(d3.json, "http://api.foknet.nl")
     .defer(d3.json, "../data/trammetrostations.geojson")
     .defer(d3.csv,  "../data/treinstations.csv")
     .await(ready);
 
-function ready(error, buurten, api_data, trammetrostations, treinstations) {
+function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstations) {
   if (error) throw error;
-
   /* Areas */
-  console.log(buurten)
+  var code2poly = {};
+  for (let i = 0; i < stad_poly.features.length; i++){
+    let poly = stad_poly.features[i].geometry.coordinates;
+    code2poly[stad_poly.features[i].properties.Stadsdeel] = poly;
+    // code2poly[stad_poly.features[i].properties.Stadsdeel_code] = poly;
+  }
 
   var stadsdelen = buurten.features//topojson.feature(buurten, buurten)//.features;
 
@@ -125,11 +135,11 @@ function ready(error, buurten, api_data, trammetrostations, treinstations) {
             html += "</span>";
             html += "</div>";
 
-            d = document.querySelector(`.${d.properties.Buurt.replace(/ /g,".")}`).__data__
-            colorPath(d)
+            d2 = document.querySelector(`.${d.properties.Buurt.replace(/ /g,".")}`).__data__
+            colorPath(d2)
 
-            if (!($(".tooltip_key").text().substr(0,4) ==
-                    d.properties.Buurt.substr(0,4))){
+            if (!($(".tooltip_key").text().substr(0,3) ==
+                    d.properties.Buurt.substr(0,3))){
             $("#tooltip-container").html(html);
             $(this).attr("fill-opacity", "0.8");
             $("#tooltip-container").show();
@@ -172,10 +182,17 @@ function ready(error, buurten, api_data, trammetrostations, treinstations) {
   var station = svgmap.selectAll(".treinstations")
     .data(api_data.data)
     .enter().append("circle")
-      .attr("transform", function(d) { return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
-      .attr("class", "station")
+      .attr("transform", function(d)
+      { return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
+      .attr("id", function(d) {for (let i = 0; i < 7; i++){
+        if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
+        return Object.keys(code2poly)[i]
+      }}})
       .attr("r", 3)
+      .on("mouseover", function(d) {for (let i = 0; i < 7; i++){if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
+        console.log(Object.keys(code2poly)[i])
+      }}})
       .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}});
-
+// console.log(inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0]))
 
 };

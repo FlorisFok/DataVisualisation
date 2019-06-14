@@ -28,9 +28,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav mr-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/pages//viz.html">Rooms</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages//cal.html">Calculator</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages//raw.html">Raw data</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages/viz.html">Rooms</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages/cal.html">Calculator</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/pages/raw.html">Raw data</a></li>
                         <li class="nav-item"><a class="nav-link" href="http://api.foknet.nl">API</a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto mt-2">
@@ -42,20 +42,60 @@
         <con class="container p-5">
           <p></p>
           <script type="text/javascript">
-          var fileName = "/data/apidata2.json";
-          var txtFile = new XMLHttpRequest();
+          function reqListener () {
+            // console.log(this.responseText['data'])
+            var api_data = JSON.parse(this.responseText);
+            var _table_ = document.createElement('table'),
+            _tr_ = document.createElement('tr'),
+            _th_ = document.createElement('th'),
+            _td_ = document.createElement('td');
 
-          txtFile.onreadystatechange = function()
-          {
-              if (txtFile.readyState === 4 && txtFile.status == 200)
-              {
-                  const data = JSON.parse(txtFile.responseText);
-                  var myJSON = JSON.stringify(data);
-                  document.querySelector("p").innerHTML = myJSON;
+          // Builds the HTML Table out of myList json data from Ivy restful service.
+          function buildHtmlTable(arr) {
+            var table = _table_.cloneNode(false),
+              columns = addAllColumnHeaders(arr, table);
+            for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+              var tr = _tr_.cloneNode(false);
+              for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+                var td = _td_.cloneNode(false);
+                cellValue = arr[i][columns[j]];
+                td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+                tr.appendChild(td);
+              }
+              table.appendChild(tr);
             }
+            return table;
           }
-          txtFile.open("GET", fileName);
-          txtFile.send();
+
+          // Adds a header row to the table and returns the set of columns.
+          // Need to do union of keys from all records as some records may not contain
+          // all records
+          function addAllColumnHeaders(arr, table) {
+            var columnSet = [],
+              tr = _tr_.cloneNode(false);
+            for (var i = 0, l = arr.length; i < l; i++) {
+              for (var key in arr[i]) {
+                if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+                  columnSet.push(key);
+                  var th = _th_.cloneNode(false);
+                  th.appendChild(document.createTextNode(key));
+                  tr.appendChild(th);
+                }
+              }
+            }
+            table.appendChild(tr);
+            return columnSet;
+          }
+
+          document.body.appendChild(buildHtmlTable(api_data.data));
+          }
+
+          var url = "http://api.foknet.nl";
+
+          var oReq = new XMLHttpRequest();
+          oReq.addEventListener('load', reqListener);
+          oReq.open("get", url, true);
+          oReq.send();
           </script>
 
         </con>

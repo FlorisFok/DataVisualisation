@@ -143,7 +143,6 @@ def save(e, file):
                 lon = streetdict[street][1]
             except:
                 lat, lon = latlon_by_term(street)
-                print(lat, lon)
 
             call = make_insert(mycursor,loc,
                             scrape_date+' '+file[15:-2].replace('_', ':'),
