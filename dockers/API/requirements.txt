@@ -2,5 +2,5 @@ Flask
 Flask-Session
 requests
 flask_reverse_proxy_fix
--U flask-cors
+flask-cors
 mysql-connector
