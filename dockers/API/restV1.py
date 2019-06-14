@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
+from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error
 import json
@@ -8,6 +9,7 @@ import json
 app = Flask(__name__)
 app.config['REVERSE_PROXY_PATH'] = '/foo'
 ReverseProxyPrefixFix(app)
+CORS(app)
 
 CENTER = (52.367612, 4.893884)
 
