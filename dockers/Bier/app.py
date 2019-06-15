@@ -40,7 +40,8 @@ def index():
 
 @app.route("/krat")
 def krat():
-    return render_template("krat.html", beers=beers, kratten = kratten)
+    names = get_names()
+    return render_template("krat.html", beers=beers, kratten = kratten, names=names)
 
 @app.route("/registrants")
 def registrants():
@@ -65,7 +66,8 @@ def registrants():
 
 @app.route("/", methods=["POST"])
 def index_back():
-    return render_template("index2.html", beers=beers, kratten = kratten)
+    names = get_names()
+    return render_template("index2.html", beers=beers, kratten = kratten, names=names)
 
 
 @app.route("/registrants", methods=["POST"])
