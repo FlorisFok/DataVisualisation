@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>Bier streep lijst</h1>
+    <h3>Bier afnemen, vul aantal bier in</h3>
+    <form action="/register" method="post">
+        <input autocomplete="off" autofocus name="name" placeholder="Name" type="text">
+        <select id="count" name="biertjes">
+            <option disabled selected value="">0</option>
+            {% for beer in beers %}
+                <option value={{ beer }}>{{ beer }}</option>
+            {% endfor %}
+        </select>
+        <select name="kwali">
+            <option disabled selected value="">Niveau</option>
+            <option value=0.25>zwerver</option>
+            <option value=0.45>premium</option>
+
+        </select>
+        <input type="submit" value="Submit" id="submit">
+    </form>
+    <h3>Bier donatie, vul aantal kratten gekocht</h3>
+    <form action="/register" method="post">
+        <input autocomplete="off" name="name" placeholder="Name" type="text">
+        <select name="kratten">
+            <option disabled selected value="">0</option>
+            {% for beer in kratten %}
+                <option value={{ beer }}>{{ beer }}</option>
+            {% endfor %}
+        </select>
+        <select name="kwali">
+            <option disabled selected value="">Niveau</option>
+            <option value=0.25>zwerver</option>
+            <option value=0.45>premium</option>
+
+        </select>
+        <input type="submit" value="Submit" id="submit2">
+    </form>
+    <h3>Statiegeld gekregen, vul aantal kratten ingeleverd</h3>
+    <form action="/register" method="post">
+        <input autocomplete="off" name="name" placeholder="Name" type="text">
+        <select name="kratten2">
+            <option disabled selected value="">0</option>
+            {% for beer in kratten %}
+                <option value={{ beer }}>{{ beer }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit" id="submit2">
+    </form>
+    <p>
+    <h3>Enkel de statastieken?</h3>
+    <form action="/registrants" method="post">
+        <input type="submit" value="STATS" id="submit">
+    </form>
+    </p>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <!-- Begin page content -->
+    <div class="container">
+    <!--<div class='second_form'>-->
+      <div class="description ">
+        <h1 >Drinken op de schouders van reuzen
+            <p>
+              Velen zijn je dankbaar voor je inzet.
+            </p>
+          </h1>
+      </div>
+      <div class='beer_form'>
+        <h3>Bier donatie, vul aantal kratten gekocht</h3>
+      <form action="/register" method="post">
+        <input autocomplete="off" name="name" placeholder="Name" type="text">
+        <select name="kratten">
+            <option disabled selected value="">0</option>
+            {% for beer in kratten %}
+                <option value={{ beer }}>{{ beer }}</option>
+            {% endfor %}
+        </select>
+        <select name="kwali">
+            <option disabled selected value="">Niveau</option>
+            <option value=0.25>zwerver</option>
+            <option value=0.45>premium</option>
+
+        </select>
+        <input type="submit" value="Submit" id="submit2">
+      </form>
+      <h3>Statiegeld gekregen, vul aantal kratten ingeleverd</h3>
+      <form action="/register" method="post">
+        <input autocomplete="off" name="name" placeholder="Name" type="text">
+        <select name="kratten2">
+            <option disabled selected value="">0</option>
+            {% for beer in kratten %}
+                <option value={{ beer }}>{{ beer }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit" id="submit2">
+      </form>
+      <p>
+      <h3>Enkel de statastieken?</h3>
+      <form action="/registrants" method="post">
+        <input type="submit" value="STATS" id="submit">
+      </form>
+      </p>
+    </main>
+    </div>
+   </div>
+
+{% endblock %}

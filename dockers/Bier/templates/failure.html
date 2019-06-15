@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>{{ message }}</p>
+    </div>
+    <form action="/" method="post">
+        <input type="submit" value="BACK" id="submit">
+    </form>
+{% endblock %}

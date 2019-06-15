@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<script>
+window.onload = function () {
+
+var points = JSON.parse('{{ users|safe }}');
+		var chart = new CanvasJS.Chart("chartContainer", {
+			title: {
+				text: "BIER AFNAMEN"
+			},
+			axisY: {
+				labelFontSize: 20,
+				labelFontColor: "dimGrey"
+			},
+			axisX: {
+				labelAngle: -30
+			},
+			data: [
+			{
+				type: "column",
+				dataPoints: points
+			}
+			]
+		});
+
+	chart.render();
+}
+</script>
+
+<div id="chartContainer" style="padding: 10%; height: 35%; width: 80%; "></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<div id="chartContainer2" style="padding: 10%; height: 35%; width: 80%; ">
+</div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+{% endblock %}

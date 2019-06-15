@@ -1,0 +1,99 @@
+
+/*sdajksadkj*/
+body
+{
+     background-image: url('backgroundimage.jpg');
+     background-attachment: fixed;
+     background-size: cover;
+     background-position: center;
+}
+
+.overlay
+{
+     position: absolute;
+     min-height: 100%;
+     min-width: 100%;
+     left: 0;
+     top: 0;
+     background: rgba(244, 244, 244, 0.79);
+}
+
+
+.navbar
+{
+    background:#F97300;
+
+}
+.nav-link , .navbar-brand
+{
+    color: #f4f4f4;
+    cursor: pointer;
+
+}
+.nav-link
+{
+    margin-right: 1em !important;
+
+}
+.nav-link:hover
+{
+    background: #f4f4f4;
+    color: #f97300;
+
+}
+.navbar-collapse
+{
+    justify-content: flex-end;
+
+}
+.navbar-toggler
+{
+    background:#fff !important;
+
+}
+
+
+/*Test*/
+.description
+{
+    position: absolute;
+    top: 10%;
+    margin: auto;
+    padding: 2em;
+}
+
+.description h1
+{
+     color:#F97300 ;
+}
+
+.description p
+{
+     color:#666;
+     font-size: 20px;
+     width: 100%;
+     line-height: 1.5;
+}
+
+.description button
+{
+     border:1px  solid #F97300;
+     background:#F97300;
+     color:#fff;
+}
+
+.beer_form
+{
+    position: absolute;
+    top: 25%;
+    margin: auto;
+    padding: 2em;
+}
+.second_form
+{
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    margin: auto;
+    padding: 2em;
+}

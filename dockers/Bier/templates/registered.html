@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class = "second_form">
+<main class="container">
+
+    <h2>Striped Rows</h2>
+    <p>The .table-striped class adds zebra-stripes to a table:</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>NAAM</th>
+                <th> BIERTJES</th>
+            </tr>
+        </thead>
+        {% for line in tekst %}
+        <thead>
+            <tr>
+            {% for word in line %}
+                <td>{{word}}</td>
+            {% endfor %}
+            </tr>
+        </thead>
+        {% endfor %}
+
+    </table>
+    <form action="/" method="post">
+        <input type="submit" value="BACK" id="submit">
+    </form>
+
+</main>
+</div>
+{% endblock %}
