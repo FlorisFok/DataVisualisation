@@ -11,6 +11,8 @@ STAT_COL = 6
 
 STATIE = 3.90
 BOTTLES = 24
+ZWERVER = 0.35
+PREMIUM = 0.60
 # Gives some flexability to small price changes
 PRICE_BARRIER = 0.5
 
@@ -174,7 +176,9 @@ def time_stamp():
 			str(time.gmtime().tm_min) + '.')
 	return tijd
 
-
+def wbw():
+	pass
+	
 if __name__ == '__main__':
 	sheet = use_sheet()
 	set_up(sheet)
