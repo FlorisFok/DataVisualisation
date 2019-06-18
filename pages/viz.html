@@ -43,32 +43,14 @@
 
         <div class="all-svg">
           <div class="row">
-            <div class="col-1">
-              <div class="days-hours-heatmap">
-                <!-- calibration and render type controller -->
-                <div class="calibration" role="calibration">
-                  <div class="group" role="example">
-                    <svg width="120" height="17">
-                    </svg>
-                    <div role="description" class="description">
-                      <label>Less ~</label>
-                      <label>More</label>
-                    </div>
-                    <div>
-                      <input type="radio" name="displayType" checked/>
-                      <label>count</label>
-                      <input type="radio" name="displayType"/>
-                      <label>daily</label>
-                    </div>
-                  </div>
-                </div>
-                <!-- heatmap -->
-                <svg role="heatmap" class="heatmap"></svg>
-              </div>
-            </div>
-            <div class="col-6">
+            <div class="col-7">
               <div id="tooltip-container"></div>
-              <svg width="800" height="600" id="map"></svg>
+              <div class="">
+                <svg width="800" height="500" id="map"></svg>
+              </div>
+              <div class="">
+                <svg id="heatmap"></svg>
+              </div>
 
             </div>
             <div class="col-5">
@@ -83,8 +65,8 @@
           </div>
         </div>
 
-      <script type="text/javascript" src="/static/app.js"></script>
       <script src="http://d3js.org/d3.v4.min.js"></script>
+      <script type="text/javascript" src="/static/app.js"></script>
       <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>
       <script src="http://d3js.org/topojson.v2.min.js"></script>

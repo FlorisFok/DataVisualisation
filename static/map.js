@@ -7,7 +7,7 @@ var svgmap = d3.select("#map"),
 
 // Should really change this to 'clipExtent' instead of center
 var projection = d3.geoAlbers()
-  .center([4.9, 52.366667])
+  .center([4.9, 52.346667])
   .parallels([51.5, 51.49])
   .rotate(120)
   .scale(200000)
@@ -90,6 +90,13 @@ function inside_poly(point, pol) {
     return inside;
 };
 
+function color_day(date) {
+  var old_block = document.querySelector("rect#_28-08-2015")
+  let x = old_block.attributes.x.value
+  let old_block.attributes.x.value
+  let old_block.attributes.x.value
+  old_block.attributes.x.value
+}
 
 
 d3.queue()
@@ -111,7 +118,7 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
   }
 
   var stadsdelen = buurten.features//topojson.feature(buurten, buurten)//.features;
-
+  console.log(api_data)
   // Draw the buurten
   svgmap.selectAll(".buurt")
       .data(stadsdelen)
@@ -150,7 +157,6 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
             }
 
             var coordinates = d3.mouse(this);
-
             var map_width = $('#map')[0].getBoundingClientRect().width;
 
             if (d3.event.layerX < map_width / 2) {
