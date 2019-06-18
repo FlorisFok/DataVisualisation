@@ -37,7 +37,7 @@ var title="Frequencie uploading";
 
       var svg = d3.select("#heatmap")
           .attr("width","90%")
-          .attr("viewBox","0 0 "+(xOffset+width)+" 540")
+          .attr("viewBox","0 0 "+(xOffset+width)+" 200")
 
       //title
       svg.append("text")
@@ -54,7 +54,8 @@ var title="Frequencie uploading";
               return d.key;
           })
           .attr("transform",function(d,i){
-              return "translate(0,"+(yOffset+(i*(height+calY)))+")";
+            console.log(d,i)
+              return "translate(0,"+(yOffset+((i*height+calY)))+")";
           })
 
       //create a daily rectangle for each year
@@ -98,7 +99,7 @@ var title="Frequencie uploading";
           .enter()
           .append("rect")
           .attr("id",function(d) {
-              return "_"+format(d.date);
+              return "__"+format(d.date);
           })
           .attr("class", function(d) {
               if (d.value<breaks[0]) {

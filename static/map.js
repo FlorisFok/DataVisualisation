@@ -7,7 +7,7 @@ var svgmap = d3.select("#map"),
 
 // Should really change this to 'clipExtent' instead of center
 var projection = d3.geoAlbers()
-  .center([4.9, 52.343667])
+  .center([4.9, 52.349667])
   .parallels([51.5, 51.49])
   .rotate(120)
   .scale(190000)
@@ -23,29 +23,85 @@ var colorScale = d3.scaleOrdinal(d3.schemeCategory20)
     colorLines = d3.scaleSequential(d3.schemeCategory20);
 
 svgmap.append("text")
-  .attr("x", 0)
-  .attr("y", 15)
+  .attr("x", width - 120)
+  .attr("y", 30)
+  .attr("font-size", "large")
+  .attr("text-decoration", "italic")
+  .attr("font-weight", "bold")
+  .text("Zoom & drag!");
+svgmap.append("text")
+  .attr("x", width - 100)
+  .attr("y", 60)
+  .attr("class", "topMapText")
+  .text("~");
+
+svgmap.append("text")
+  .attr("x", 30)
+  .attr("y", 30)
   .attr("font-size", "large")
   .attr("text-decoration", "underline")
   .attr("font-weight", "bold")
   .text("Legenda");
+
+svgmap.append("text")
+  .attr("x", 30)
+  .attr("y", height - 60)
+  .attr("class", "small")
+  .attr("id", "legendPrice")
+  .text("Price");
+svgmap.append("text")
+  .attr("x", 30)
+  .attr("y", height - 45)
+  .attr("class", "small")
+  .attr("id", "legendSize")
+  .text("Size");
+svgmap.append("text")
+  .attr("x", 30)
+  .attr("y", height - 30)
+  .attr("class", "small")
+  .attr("id", "legendStreet")
+  .text("Street");
+svgmap.append("text")
+  .attr("x", 30)
+  .attr("y", height - 15)
+  .attr("class", "small")
+  .attr("id", "legendUrl")
+  .text("Url");
 
 var y0 = 30;
 var spacingy = 20
 var x0 = 5
 var spacingx = 55
 
-// /*Legenda*/
-// svgmap.append("circle")
-//   .attr("class", "station")
-//   .attr("cx", x0 + 22)
-//   .attr("cy", y0 + spacingy * 3)
-//   .attr("r", 3);
-// svgmap.append("text")
-//   .attr("class", "label")
-//   .attr("x", spacingx + 5)
-//   .attr("y", y0 + spacingy * 3 + 5)
-//   .text("Kamers");
+// Sepcial Variables
+var previous_block = ''
+
+/*Legenda*/
+svgmap.append("circle")
+  .attr("class", "room")
+  .attr("cx", x0 + 22)
+  .attr("cy", y0 + spacingy * 1)
+  .attr("r", 3)
+  .style("fill", "green");
+
+svgmap.append("circle")
+  .attr("class", "room_temp")
+  .attr("cx", x0 + 22)
+  .attr("cy", y0 + spacingy * 2)
+  .attr("r", 3)
+  .style("fill", "red");
+
+svgmap.append("text")
+  .attr("class", "label")
+  .attr("x", spacingx + 5)
+  .attr("y", y0 + spacingy * 1 + 5)
+  .text("Onbepaalde tijd");
+
+svgmap.append("text")
+  .attr("class", "label")
+  .attr("x", spacingx + 5)
+  .attr("y", y0 + spacingy * 2 + 5)
+  .text("Tijdelijk");
 
 function colorPath(d) {
   let g = d3.select('.sun')
@@ -91,22 +147,32 @@ function inside_poly(point, pol) {
 };
 
 function colorDay(date) {
-  if (document.querySelector("#temp_rect")){
-    document.querySelector("#temp_rect").remove()
+  let new_date = `${date.substring(8, 10)}${date.substring(4, 8)}${date.substring(0, 4)}`
+  if (previous_block){
+    if (document.querySelector(`rect#__${previous_block}`)){
+      var ele = document.querySelector(`rect#__${previous_block}`)
+      let color = ele.attributes.class.value
+      ele.style = `fill:${color};`
+
+    }
+    else{
+      var ele2 = document.querySelector(`rect#_${previous_block}`)
+      let color = ele2.attributes.class.value
+      ele2.style = `fill:white;`
+
+    }
   }
-  var old_blocks = document.querySelector(`rect#_${date.substring(8, 10)}${date.substring(4, 8)}${date.substring(0, 4)}`)
-  let x = old_blocks.attributes.x.value
-  let y = old_blocks.attributes.y.value
-  console.log(y)
-  d3.select("#heatmap")
-    .append("rect")
-    .attr('id', 'temp_rect')
-    .attr("stroke","#fff")
-    .attr("width",cellSize)
-    .attr("height",cellSize)
-    .attr("x", x)
-    .attr("y", y+1)
-    .attr("fill", 'red')
+  if (document.querySelector(`rect#__${new_date}`)){
+    var ele = document.querySelector(`rect#__${new_date}`)
+    ele.style = "fill:red;"
+    previous_block = new_date
+
+  }
+  else{
+    var ele2 = document.querySelector(`rect#_${new_date}`)
+    ele2.style = "fill:red;"
+    previous_block = new_date
+  }
 }
 
 
@@ -132,72 +198,87 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
   var stadsdelen = buurten.features//topojson.feature(buurten, buurten)//.features;
   console.log(api_data)
   // Draw the buurten
-  svgmap.selectAll(".buurt")
-      .data(stadsdelen)
-    .enter().insert("g")
-      .append("path")
-        .attr("class", "buurt")
-        .attr("d", path)
-        // .attr("fill", "#faebc4")
-        .attr("fill", function(d) { if (d.properties.Buurtcombinatie_code == 'N73'){return "white"}
-                                    else if (d.properties.Stadsdeel_code == 'B'){return "white"}
-                                    else{return colorStadsdelen(d.properties.Stadsdeel_code[0]) }})
-        .on("click", function(d) {
-            var html = "";
+  svgmap.append("g")
+         .attr('class', "zoom_g")
+         .selectAll(".buurt")
+         .data(stadsdelen)
+        .enter().insert("g")
+          .on("wheel.zoom",function(){
+              var currScale = projection.scale();
+              var newScale = currScale - 30*event.deltaY;
+              var currTranslate = projection.translate();
+              var coords = projection.invert([event.offsetX, event.offsetY]);
+              projection.scale(newScale);
+              var newPos = projection(coords);
+              projection.translate([currTranslate[0] + (event.offsetX - newPos[0]), currTranslate[1] + (event.offsetY - newPos[1])]);
+              let g = d3.select(".zoom_g");
+              g.selectAll("path").attr("d", path);
+              g.selectAll("circle").attr("transform", function(d)
+              {return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
+          })
+          .call(d3.drag().on("drag", function(){
+              var currTranslate = projection.translate();
+              projection.translate([currTranslate[0] + d3.event.dx,
+                                    currTranslate[1] + d3.event.dy]);
 
-            html += "<div class=\"tooltip_kv\">";
-            html += "<span class=\"tooltip_value\">";
-            html += `${stadsdeel[d.properties.Stadsdeel_code]}`;
-            html += "</span>";
-            html += "<span class=\"tooltip_key\">";
-            html += `${d.properties.Buurt}`
-            html += "</span>";
-            html += "</div>";
+              let g = d3.select(".zoom_g");
+              g.selectAll("path").attr("d", path);
+              g.selectAll("circle").attr("transform", function(d)
+              {return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
+          }))
+        .append("path")
+          .attr("class", "buurt")
+          .attr("d", path)
+          // .attr("fill", "#faebc4")
+          .attr("fill", function(d) { if (d.properties.Buurtcombinatie_code == 'N73'){return "None"}
+                                      else if (d.properties.Stadsdeel_code == 'B'){return "None"}
+                                      else{return colorStadsdelen(d.properties.Stadsdeel_code[0]) }})
+          .on("click", function(d) {
+              var html = "";
 
-            d2 = document.querySelector(`.${d.properties.Buurt.replace(/ /g,".")}`).__data__
-            colorPath(d2)
+              html += "<div class=\"tooltip_kv\">";
+              html += "<span class=\"tooltip_value\">";
+              html += `${stadsdeel[d.properties.Stadsdeel_code]}`;
+              html += "</span>";
+              html += "<span class=\"tooltip_key\">";
+              html += `${d.properties.Buurt}`
+              html += "</span>";
+              html += "</div>";
 
-            if (!($(".tooltip_key").text().substr(0,3) ==
-                    d.properties.Buurt.substr(0,3))){
-            $("#tooltip-container").html(html);
-            $(this).attr("fill-opacity", "0.8");
-            $("#tooltip-container").show();
-            }
-            else{
-              $(this).attr("fill-opacity", "1.0");
-              $("#tooltip-container").hide();
-            }
+              d2 = document.querySelector(`.${d.properties.Buurt.replace(/ /g,".")}`).__data__
+              colorPath(d2)
 
-            var coordinates = d3.mouse(this);
-            var map_width = $('#map')[0].getBoundingClientRect().width;
+              if (!($(".tooltip_key").text().substr(0,3) ==
+                      d.properties.Buurt.substr(0,3))){
+              $("#tooltip-container").html(html);
+              $(this).attr("fill-opacity", "0.8");
+              $("#tooltip-container").show();
+              }
+              else{
+                $(this).attr("fill-opacity", "1.0");
+                $("#tooltip-container").hide();
+              }
 
-            if (d3.event.layerX < map_width / 2) {
-              d3.select("#tooltip-container")
-                .style("top", (d3.event.layerY + 15) + "px")
-                .style("left", (d3.event.layerX + 15) + "px");
-            } else {
-              var tooltip_width = $("#tooltip-container").width();
-              d3.select("#tooltip-container")
-                .style("top", (d3.event.layerY + 15) + "px")
-                .style("left", (d3.event.layerX - tooltip_width - 30) + "px");
-            }
-        })
-      .append("title")
-        .text(function(d) { return stadsdeel[d.properties.Stadsdeel_code] + ": " + d.properties.Buurt });
+              var coordinates = d3.mouse(this);
+              var map_width = $('#map')[0].getBoundingClientRect().width;
 
-  // Draw borders around buurten
-  svgmap.append("path")
-      .data(stadsdelen)
-      .enter().insert("g")
-      .attr("class", "buurt-borders")
-      .attr("d", path)
-      .attr("style", "outline: solid black;")
-      .style("fill", "none")
-    .append("title")
+              if (d3.event.layerX < map_width / 2) {
+                d3.select("#tooltip-container")
+                  .style("top", (d3.event.layerY + 15) + "px")
+                  .style("left", (d3.event.layerX + 15) + "px");
+              } else {
+                var tooltip_width = $("#tooltip-container").width();
+                d3.select("#tooltip-container")
+                  .style("top", (d3.event.layerY + 15) + "px")
+                  .style("left", (d3.event.layerX - tooltip_width - 30) + "px");
+              }
+          })
+        .append("title")
+          .text(function(d) { return stadsdeel[d.properties.Stadsdeel_code] + ": " + d.properties.Buurt });
 
   /* Points */
   // Draw the points for the stations
-  var station = svgmap.selectAll(".treinstations")
+  var station = d3.select(".zoom_g").selectAll(".treinstations")
     .data(api_data.data)
     .enter().append("circle")
       .attr("transform", function(d)
@@ -206,12 +287,21 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
         if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
         return Object.keys(code2poly)[i]
       }}})
-      .attr("r", 3)
-      .on("mouseover", function(d) {for (let i = 0; i < 7; i++){if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
-        console.log(Object.keys(code2poly)[i])
-        colorDay(d.start_date)
+      .attr("r", 5)
+      .on("mouseover", function(d) {colorDay(d.due_date)
+        for (let i = 0; i < 7; i++){if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
+        document.querySelector(".topMapText").innerHTML = Object.keys(code2poly)[i]
       }}})
-      .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}});
+      .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}})
+      .style("stroke", 'black')
+      .on("click", function(d) {
+        console.log(d)
+        document.querySelector("#legendUrl").innerHTML = `<a href="${d.url}" target="_blank"> Advertentie <a>`;
+        document.querySelector("#legendUrl").style = 'fill:blue;'
+        document.querySelector("#legendPrice").innerHTML = `Price: 	&euro;${d.price},-`;
+        document.querySelector("#legendStreet").innerHTML = `${d.loc.substring(0, d.loc.length-9)}`;
+        document.querySelector("#legendSize").innerHTML = `Size: ${d.size}m&sup2;`;
+      });
 // console.log(inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0]))
 
 };

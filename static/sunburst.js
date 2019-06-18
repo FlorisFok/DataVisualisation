@@ -593,7 +593,6 @@ var nodeData = {'name': '',
 
 
 function make_sun_from_click(pieData) {
-  console.log(pieData)
   pieDatac = pieData.children
   var nodeData = {"name":'', "children":[]};
   if (pieData.height == 2){
@@ -616,7 +615,6 @@ function make_sun_from_click(pieData) {
   else{
     return;
   }
-  console.log(nodeData)
   d3.select(".sun").remove();
   var svg = d3.select("#burst")
   // Variables
@@ -646,7 +644,7 @@ function make_sun_from_click(pieData) {
       .outerRadius(function (d) { return d.y1 });
 
   g.append("text")
-    .attr("class", "label")
+    .attr("class", "label_center")
     .attr("x", 0)
     .attr("y", 0)
     .attr("text-anchor", 'middle')
@@ -661,11 +659,12 @@ function make_sun_from_click(pieData) {
       .attr("d", arc)
       .attr("class", function (d) { return d.data.name})
       .attr('id', 'grey')
-      .style('stroke', '#fff')
+      .style('stroke', '#444')
       // .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); })
       .style("fill", 'grey')
-      .on("mouseover", function (d) { document.querySelector(".label").innerHTML = d.data.name
+      .on("mouseover", function (d) { document.querySelector(".label_center").innerHTML = d.data.name
                                   colorPath(d)
+
                                 })
       .on("click", function (d) {
                                   // document.querySelector(".label").innerHTML = d.data.name
@@ -707,7 +706,7 @@ function make_sun(nodeData){
       .outerRadius(function (d) { return d.y1 });
 
   g.append("text")
-    .attr("class", "label")
+    .attr("class", "label_center")
     .attr("x", 0)
     .attr("y", 0)
     .attr("text-anchor", 'middle')
@@ -722,10 +721,10 @@ function make_sun(nodeData){
       .attr("d", arc)
       .attr("class", function (d) { return d.data.name})
       .attr('id', 'grey')
-      .style('stroke', '#fff')
+      .style('stroke', '#444')
       // .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); })
       .style("fill", 'grey')
-      .on("mouseover", function (d) { document.querySelector(".label").innerHTML = d.data.name
+      .on("mouseover", function (d) { document.querySelector(".label_center").innerHTML = d.data.name
                                   colorPath(d)
                                     })
       .on("click", function (d) { make_sun_from_click(d) });

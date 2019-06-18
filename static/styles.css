@@ -61,6 +61,25 @@ p{
 .tooltip_kv{
   font-size: 9px;
 }
+#tooltip-container2 {
+  position: absolute;
+  background-color: #fff;
+  color: #000;
+  padding: 1px;
+  border: 1px solid;
+  display: none;
+}
+.tooltip_key2 {
+  font-weight: bold;
+}
+
+.tooltip_value2 {
+  margin-left: 5px;
+  float: right;
+}
+.tooltip_kv2{
+  font-size: 9px;
+}
 
 
 
@@ -76,7 +95,7 @@ p{
     }
     text    {
         font-family:sans-serif;
-        font-size:1.5em;
+        font-size:1.0em;
     }
     .dayLabel   {
         fill:#aaa;
