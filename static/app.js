@@ -57,19 +57,13 @@ var title="Frequencie uploading";
               return "translate(0,"+(yOffset+(i*(height+calY)))+")";
           })
 
-      // var labels = cals.append("text")
-      //     .attr("class","yearLabel")
-      //     .attr("x",xOffset)
-      //     .attr("y",15)
-      //     .text(function(d){return d.key});
-
       //create a daily rectangle for each year
       var rects = cals.append("g")
           .attr("id","alldays")
           .selectAll(".day")
           .data(function(d) { return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
           .enter().append("rect")
-          .attr("id",function(d) {
+          .attr("id", function(d) {
               return "_"+format(d);
               //return toolDate(d.date)+":\n"+d.value+" dead or missing";
           })
@@ -104,7 +98,7 @@ var title="Frequencie uploading";
           .enter()
           .append("rect")
           .attr("id",function(d) {
-              return format(d.date);
+              return "_"+format(d.date);
           })
           .attr("class", function(d) {
               if (d.value<breaks[0]) {

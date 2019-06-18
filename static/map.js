@@ -7,10 +7,10 @@ var svgmap = d3.select("#map"),
 
 // Should really change this to 'clipExtent' instead of center
 var projection = d3.geoAlbers()
-  .center([4.9, 52.346667])
+  .center([4.9, 52.343667])
   .parallels([51.5, 51.49])
   .rotate(120)
-  .scale(200000)
+  .scale(190000)
   .translate([width / 2, height / 2]);
 
 var path = d3.geoPath()
@@ -90,12 +90,23 @@ function inside_poly(point, pol) {
     return inside;
 };
 
-function color_day(date) {
-  var old_block = document.querySelector("rect#_28-08-2015")
-  let x = old_block.attributes.x.value
-  let old_block.attributes.x.value
-  let old_block.attributes.x.value
-  old_block.attributes.x.value
+function colorDay(date) {
+  if (document.querySelector("#temp_rect")){
+    document.querySelector("#temp_rect").remove()
+  }
+  var old_blocks = document.querySelector(`rect#_${date.substring(8, 10)}${date.substring(4, 8)}${date.substring(0, 4)}`)
+  let x = old_blocks.attributes.x.value
+  let y = old_blocks.attributes.y.value
+  console.log(y)
+  d3.select("#heatmap")
+    .append("rect")
+    .attr('id', 'temp_rect')
+    .attr("stroke","#fff")
+    .attr("width",cellSize)
+    .attr("height",cellSize)
+    .attr("x", x)
+    .attr("y", y+1)
+    .attr("fill", 'red')
 }
 
 
@@ -103,6 +114,7 @@ d3.queue()
     .defer(d3.json, "../data/GEBIED_BUURTEN.json")
     .defer(d3.json, "/data/GEBIED_STADSDELEN.json")
     .defer(d3.json, "http://api.foknet.nl")
+    // .defer(d3.json, "http://api.foknet.nl/where/due_date+2019-06-18")
     .defer(d3.json, "../data/trammetrostations.geojson")
     .defer(d3.csv,  "../data/treinstations.csv")
     .await(ready);
@@ -197,6 +209,7 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
       .attr("r", 3)
       .on("mouseover", function(d) {for (let i = 0; i < 7; i++){if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
         console.log(Object.keys(code2poly)[i])
+        colorDay(d.start_date)
       }}})
       .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}});
 // console.log(inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0]))
