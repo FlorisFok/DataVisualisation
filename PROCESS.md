@@ -23,7 +23,7 @@ Hackethon in Eindhoven
 * Interactive labels on the map
 * Frist two  visualisations are running --> presented them at the meeting
 
-# Weekend 1
+# weekend 1
 * Reversed proxy is finally working
 * Hosted the first flask projects
 * Created a API and MYSQL
@@ -37,3 +37,28 @@ Hackethon in Eindhoven
 * Made a street to langitude/longotude converter
 * mastering api request in js
 * leaning the basics of SQL again
+
+# day 8
+* linked the sunburst and the map
+* Colored and plotted the rooms
+
+# day 9
+* updated the API to doe more statments
+* Resolved the cross orgin error in the api
+* now loads realtime data
+
+# day 10
+* Started scraping hourly and logging in second sql database
+* made the sunburst zoomable
+
+# weekend 2
+* Took some time off
+* to build a bier app bier.foktnet.nl
+* inlcuding a WieBetaald wat bot
+
+# day 11
+* Changed the calander from week to year
+* linked the calander
+
+# day 12
+* tried to make the map zoomable, but the circles wont move.... Failed
