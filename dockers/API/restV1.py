@@ -5,6 +5,10 @@ import mysql.connector
 from mysql.connector import Error
 import json
 
+from sklearn.svm import SVR
+import pandas as pd
+import numpy as np
+
 
 app = Flask(__name__)
 app.config['REVERSE_PROXY_PATH'] = '/foo'
@@ -91,6 +95,13 @@ def love_pien():
                     "name":"Floris",
                     'data': get_where_json("price<550")})
 
+@app.route('/predict_price/<vars>',methods=["GET"])
+def love_pien(vars):
+    var_list = vars.split('+')
+    price = predict_price(var_list[0], var_list[1],
+                          var_list[2], var_list[3])
+    return jsonify({"price": price}), 200
+
 def connect():
     """ Connect to MySQL database """
     try:
@@ -112,13 +123,7 @@ def get_full_json(col = '*'):
     mycursor.execute('''SELECT '''+ col +''' FROM kamernet''')
     row_headers=[x[0] for x in mycursor.description] # this will extract row headers
     rv = mycursor.fetchall()
-    json_data=[]
-    for result in rv:
-        result = list(result)
-        result[2] = str(result[2])
-        result[3] = str(result[3])
-        json_data.append(dict(zip(row_headers,result)))
-    # j = json.dumps(json_data)
+    json_data = make_json(row_headers, rv)
     return json_data
 
 def get_where_json(commands):
@@ -132,18 +137,44 @@ def get_where_json(commands):
     mycursor.execute(call)
     row_headers=[x[0] for x in mycursor.description] # this will extract row headers
     rv = mycursor.fetchall()
+    json_data = make_json(row_headers, rv)
+    return json_data
+
+def predict_price(lat, lon, size, tijd):
+    conn = connect()
+    mycursor = conn.cursor()
+    mycursor.execute('''SELECT * FROM kamernet''')
+    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
+    rv = mycursor.fetchall()
+
+    json_data = make_json(row_headers, rv)
+
+    df = pd.DataFrame(json_data)
+    df_dropped = df.drop(['loc', 'url', 'start_date', 'id', 'due_date'], 1)
+
+    x = np.array(df_dropped.drop(['price'],1))
+
+    df_dropped.dropna(inplace=True)
+    y = np.array(df_dropped['price'])
+
+    clf = SVR(kernel='rbf',
+              C=100, gamma='auto',
+              degree=3,
+              epsilon=.1,
+              coef0=1)
+
+    clf.fit(x, y)
+    price = clf.predict(np.array([[lat, lon, size, tijd]]))
+    return price
+
+def make_json(row_headers, data):
     json_data=[]
-    for result in rv:
+    for result in data:
         result = list(result)
         result[2] = str(result[2])
         result[3] = str(result[3])
         json_data.append(dict(zip(row_headers,result)))
-    # j = json.dumps(json_data)
     return json_data
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')
-
-
-""" curl -H "Content-Type: appplication/json" -X POST -d '{"name":"Floris","addr":"uilie24"}' http://127.0.0.1:5000/ """
-'''curl -v http://127.0.0.1:5000/'''
