@@ -15,43 +15,81 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-        <title>Roqeust</title>
+        <title>Room pal</title>
 
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="/index.html">Roqeust</a>
-            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav mr-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/pages/viz.html">Rooms</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages/cal.html">Calculator</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages/raw.html">Raw data</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/sell">API</a></li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li id="log" class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                    </ul>
-            </div>
-        </nav>
+        <div class="container">
+          <div class = "page-header">
 
-        <main class="screen">
-          <div class="home">
-            <div>
-              <h1>Finding a room is hard, knowing what is good is even harder. <br>We can help you with both, but the choice is still yours.</h1>
-            </div>
-            <div class="center">
-              <a class="button" href="/pages/viz.html"><h2>Start Here</h2></a>
+           <h1 class="head-text">
+              Amsterdam room pal
+           </h1>
+
+         </div>
+
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Rooms in Amsterdam</h5>
+                <p class="card-text">A nice zoomable and dragable map, including a sunburst and calander view.</p>
+                <a href="/pages/viz.html" class="btn btn-primary">Let's explore</a>
+              </div>
             </div>
           </div>
-
-        </main>
-        <footer class="small text-center text-muted">
-            <p>Data from <a href="https://kamernet.nl">kamernet</a>.</p>
-        </footer>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Kamernet</h5>
+                <p class="card-text">Go to the offical site of Kamernet, and look for your room the boring way!</p>
+                <a href="https://kamernet.nl" class="btn btn-primary">Let's be lame</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Custom API request</h5>
+                <p class="card-text">Make your own API request and downlaod the json. All for free! (No commercial use)</p>
+                <a href="/pages/api.html" class="btn btn-primary">Let's try</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Peak into the database</h5>
+                <p class="card-text">Large table of all the data currently avialible on the rooms</p>
+                <a href="/pages/raw.html" class="btn btn-primary">Give me a peak</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Predict my price</h5>
+                <p class="card-text">Beta version of the price predictor, based on data from the database.</p>
+                <a href="/pages/cal.html" class="btn btn-primary">Give me magic</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">About us</h5>
+                <p class="card-text">For ideas and problems, don't hesitate to contact us</p>
+                <a href="/pages/us.html" class="btn btn-primary">Give me contact</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </body>
 
 </html>

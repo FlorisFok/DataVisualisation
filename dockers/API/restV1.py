@@ -51,20 +51,15 @@ def roll_dice(column):
 
 @app.route('/where/<commands>', methods=["GET"])
 def where_command(commands):
-
-    commands = commands.split('+')
-    commands = [i.replace('+', '>').replace('-', '<')
-                for i in commands if i != '']
-    data = get_where_json(commands)
+    calls = commands_parser(commands)
+    data = get_where_json(calls)
 
     return jsonify({"data": data}), 200
 
 @app.route('/loc/<range>/<commands>', methods=["GET"])
 def location(range, commands):
 
-    commands = commands.split('+')
-    commands = [i.replace('+', '>').replace('-', '<')
-                for i in commands if i != '']
+    calls = commands_parser(commands)
     data = get_where_json(commands)
 
     new_data = []
@@ -75,32 +70,16 @@ def location(range, commands):
 
     return jsonify({"data": new_data}), 200
 
-@app.route('/pien',methods=["GET"])
-def love_pien():
-    commands = 'price-550'
-    range = '4'
-    commands = commands.split('+')
-    commands = [i.replace('+', '>').replace('-', '<')
-                for i in commands if i != '']
-    data = get_where_json(commands)
+@app.route('/predict/<commands>', methods=["GET"])
+def price_predict(commands):
+    vars = commands.split("&")
+    vars = [float(i.replace('+','.')) for i in vars]
+    ## lat, lon, size, tijd
+    price = predict_price(vars[0], vars[1], vars[2], vars[3])
 
-    new_data = []
-    for piece in data:
-        dinstance = ((abs(piece['lat'] - CENTER[0]))**2 + (abs(piece['lon']-CENTER[1]))**2)**0.5
-        if (int(range) > dinstance*111):
-            new_data.append(piece)
 
-    return jsonify({"data": new_data}), 200
-    return jsonify({"result":"Ik hou van je :)",
-                    "name":"Floris",
-                    'data': get_where_json("price<550")})
+    return jsonify({"price": list(price)[0]}), 200
 
-@app.route('/predict_price/<vars>',methods=["GET"])
-def love_pien(vars):
-    var_list = vars.split('+')
-    price = predict_price(var_list[0], var_list[1],
-                          var_list[2], var_list[3])
-    return jsonify({"price": price}), 200
 
 def connect():
     """ Connect to MySQL database """
@@ -127,12 +106,13 @@ def get_full_json(col = '*'):
     return json_data
 
 def get_where_json(commands):
+    print(commands)
     conn = connect()
     mycursor = conn.cursor()
     call = '''SELECT * FROM kamernet'''
     call = call + " WHERE"
     for com in commands:
-        call = call + ' ' + com + ' AND'
+        call = call + com + 'AND'
     call = call[:-4]
     mycursor.execute(call)
     row_headers=[x[0] for x in mycursor.description] # this will extract row headers
@@ -175,6 +155,58 @@ def make_json(row_headers, data):
         result[3] = str(result[3])
         json_data.append(dict(zip(row_headers,result)))
     return json_data
+
+def from_date(arg, year, month, day):
+    date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
+    call = " {} >='{}' ".format(arg, date_time)
+    return call
+
+def till_date(arg, year, month, day):
+    date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
+    call = " {} <='{}' ".format(arg, date_time)
+    return call
+
+def periods(arg, year, month, day, year2, month2, day2):
+    date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
+    date_time2 = "{Y}-{m}-{d} 00:00:00".format(Y=year2, m=month2, d=day2)
+
+    call = " {0} >='{1}' AND {0} <= '{2}' ".format(arg, date_time, date_time2)
+    return call
+
+def commands_parser(raw_url):
+    commands = raw_url.split("&")
+    calls = []
+    for com in commands:
+        if 'from' in com and 'till' in com:
+            period = com.split("+")
+            period0 = period[0].split('=')
+            period1 = period[1].split('=')
+
+            t0 = period0[1][4:].split("$")
+            t1 = period1[1][4:].split("$")
+            call = periods(period0[0], t0[0], t0[1], t0[2],
+                                       t1[0], t1[1], t1[2])
+
+        elif 'from' in com:
+            print(1, com)
+            period0 = com.split('=')
+            t0 = period0[1][4:].split("$")
+            call = from_date(period0[0], t0[0], t0[1], t0[2])
+
+        elif 'till' in com:
+            period0 = com.split('=')
+            t0 = period0[1][4:].split("$")
+            call = till_date(period0[0], t0[0], t0[1], t0[2])
+        else:
+            arg = [i for i in com if not i.isdigit()]
+            value = [i for i in com if i.isdigit()]
+            operator = arg[-1].replace('+','>').replace('-','<')
+            arg = ''.join(arg[:-1])
+            value = ''.join(value)
+            call = " {} {} {} ".format(arg, operator, value)
+
+        calls.append(call)
+    return calls
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')

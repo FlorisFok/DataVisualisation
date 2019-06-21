@@ -4,3 +4,6 @@ requests
 flask_reverse_proxy_fix
 flask-cors
 mysql-connector
+sklearn
+pandas
+numpy

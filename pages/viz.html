@@ -15,6 +15,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+        <script src="http://d3js.org/d3.v4.min.js"></script>
 
 
 
@@ -24,21 +25,24 @@
 
     <body>
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="/index.html">Roqeust</a>
+            <a class="navbar-brand" href="/index.html">BACK</a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav mr-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/pages/viz.html">Rooms</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages/cal.html">Calculator</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/pages/raw.html">Raw data</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/sell">API</a></li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li id="log" class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                    </ul>
-            </div>
+            <form class="upper_form">
+              <input type="text" name="price_min" value="Minimal price">
+              <input type="text" name="price_max" value="Maximal price">
+              <input type="text" name="size" value="size">
+              <input type="submit" name="" value="show">
+            </form>
+
+            <form class="second_uppper_form" style="text-align: right; width:50%">
+              <select class="" name="">
+                <option value="">All</option>
+                <option value="">last month</option>
+              </select>
+              <input type="submit" name="" value="show">
+            </form>
         </nav>
 
         <div class="all-svg">
@@ -57,16 +61,19 @@
             <div class="col-5">
               <div>
                 <button type="button" name="button" id='sunbtn'> Reset </button>
-                <p id="sunpath"> This will show the path </p>
+                <h9 id="sunpath"> This will show the path </h9>
               </div>
               <div>
                 <svg width="500" height="500" id="burst"></svg>
+              </div>
+              <div>
+                <svg width="500" height="200" id="histo"></svg>
               </div>
             </div>
           </div>
         </div>
 
-      <script src="http://d3js.org/d3.v4.min.js"></script>
+
       <script type="text/javascript" src="/static/app.js"></script>
       <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>
@@ -74,10 +81,11 @@
       <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
       <script type="text/javascript" src="../static/map.js"></script>
       <script type="text/javascript" src="../static/sunburst.js"> </script>
+      <script type="text/javascript" src="../static/histo.js"> </script>
 
-      <!-- <footer class="small text-center text-muted">
+      <footer class="small text-center text-muted">
           <p>Data from <a href="https://kamernet.nl">kamernet</a>.</p>
-      </footer> -->
+      </footer>
     </body>
 
 </html>

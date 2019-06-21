@@ -4,7 +4,7 @@ var title="Frequencie uploading";
   var colours=["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"];
 
   //general layout information
-  var cellSize = 15;
+  var cellSize = 14;
   var xOffset=20;
   var yOffset=50;
   var calY=15;//offset of calendar in each group
@@ -36,7 +36,7 @@ var title="Frequencie uploading";
           .entries(data);
 
       var svg = d3.select("#heatmap")
-          .attr("width","90%")
+          // .attr("width","90%")
           .attr("viewBox","0 0 "+(xOffset+width)+" 200")
 
       //title
@@ -211,7 +211,6 @@ var title="Frequencie uploading";
                   return "over "+breaks[i-1];
               }
           });
-
   });//end data load
 
   //pure Bostock - compute and return monthly path data for any year

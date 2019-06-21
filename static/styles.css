@@ -1,47 +1,41 @@
-body {
+/* Menu styles */
+body{
+  background-color: yellow;
   height: 100%;
   width: 100%;
 }
-main{
-  background-image: url("https://media3.giphy.com/media/l46Cq3dy04lgkRVOE/giphy.gif?cid=790b76115cf8c444345033316b17fb34&rid=giphy.gif");
+.card{
+  margin:50px;
+  box-shadow: 10px 10px grey;
+  width: 18rem;
+  height: 14rem;
+}
+.container{
+  margin-top:20px;
+}
+.btn{
+  box-shadow: 2px 2px grey;
+  position:absolute;
+  bottom:1em;
+}
+.head-text{
+  text-shadow: 3px 3px grey;
+  font-size:70px;
+  padding: 10px;
+  border-top-style: solid;
+  border-bottom-style: solid;
 }
 
-h1{
-  display:inline-block;
-  background-color: #ffffff;
-}
-a.button {
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-
-    text-decoration: none;
-    color: initial;
-    display:inline-block;
-    background-color: #ffff00;
+/* Vizual styles */
+.all-svg{
+  margin: 20px;
 }
 
-.home{
-  padding: 100px
-}
-col-1{
-  padding-top: 50px;
-  padding-left: 50px;
-}
-p{
-  display:inline-block;
-  background-color: #ffffff;
-}
-.center{
-  padding:50px;
+svg{
+  margin:auto;
 }
 
-.screen{
-  width: 100%;
-  height: 100%;
-}
-
-
+/* Map styles */
 #tooltip-container {
   position: absolute;
   background-color: #fff;
@@ -81,72 +75,66 @@ p{
   font-size: 9px;
 }
 
+/* Table styles */
+table {
+  margin:auto;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
 
 
-/* Styles for the heatmap */
+/* Styles for the heatmap and other text*/
 .month {
-        fill: none;
-        stroke: #000;
-        stroke-width: 2px;
-    }
-    .day {
-        fill: #fff;
-        stroke: #ccc;
-    }
-    text    {
-        font-family:sans-serif;
-        font-size:1.0em;
-    }
-    .dayLabel   {
-        fill:#aaa;
-        font-size:0.8em;
-    }
-    .monthLabel {
-        text-anchor:middle;
-        font-size:0.8em;
-        fill:#aaa;
-    }
-    .yearLabel  {
-        fill:#aaa;
-        font-size:1.2em;
-    }
-
-    .key    {font-size:0.5em;}
-/* .days-hours-heatmap{
-  padding: 0px 0 20px 0;
-  width: 100px;
-  margin: 0 auto;}
-.days-hours-heatmap .calibration{
-  margin-bottom:
-  15px;width:100px;
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
 }
-.days-hours-heatmap .calibration .group{
-  display: inline-block;
-}
-.days-hours-heatmap .calibration .description{
-  width:108px;
-}
-.days-hours-heatmap .calibration>.display-control{
-  float:right;
-}
-.days-hours-heatmap .calibration>.display-control label{
-  vertical-align: top;
-}
-.days-hours-heatmap .calibration>.display-control input[type='radio']{
-  cursor: pointer;
+.day {
+    fill: #fff;
+    stroke: #ccc;
 }
 
-.days-hours-heatmap .heatmap .axis path{
-  display: none;
+text    {
+    font-family:sans-serif;
+    font-size:1.0em;
 }
-.days-hours-heatmap .heatmap .axis line{
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+.dayLabel   {
+    fill:#aaa;
+    font-size:0.8em;
 }
-.days-hours-heatmap .heatmap .axis text{
-  font-size: 9px;
+.monthLabel {
+    text-anchor:middle;
+    font-size:0.8em;
+    fill:#aaa;
 }
-.description{
-  font-size: 10px;
-} */
+.yearLabel  {
+    fill:#aaa;
+    font-size:1.2em;
+}
+
+.key {
+  font-size:0.5em;
+}
+
+/* Style all font awesome icons */
+p {
+  text-align: center;
+}
+h3 {
+  padding-top: 30%;
+  text-align: center;
+}
+.fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fa:hover {
+  opacity: 0.7;
+}
