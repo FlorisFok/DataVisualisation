@@ -25,6 +25,9 @@ body{
   border-top-style: solid;
   border-bottom-style: solid;
 }
+.input_form{
+  padding:20px;
+}
 
 /* Vizual styles */
 .all-svg{

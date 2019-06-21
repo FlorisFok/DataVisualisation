@@ -117,7 +117,6 @@ function colorPath(d) {
    document.querySelector(`.${d.data.name.replace(/ /g,".")}`).style = "fill: red;"
   }
   else if (d.depth == 2){
-    console.log(d.parent.data.name.replace(/ /g,"."))
     document.querySelector("#sunpath").innerHTML =
    `${d.parent.data.name}
    --> ${d.data.name}`
@@ -175,17 +174,16 @@ function colorDay(date) {
   }
 }
 
+call  = "http://api.foknet.nl"
 
 d3.queue()
     .defer(d3.json, "../data/GEBIED_BUURTEN.json")
     .defer(d3.json, "/data/GEBIED_STADSDELEN.json")
-    .defer(d3.json, "http://api.foknet.nl")
+    .defer(d3.json, call)
     // .defer(d3.json, "http://api.foknet.nl/where/due_date+2019-06-18")
-    .defer(d3.json, "../data/trammetrostations.geojson")
-    .defer(d3.csv,  "../data/treinstations.csv")
     .await(ready);
 
-function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstations) {
+function ready(error, buurten, stad_poly, api_data) {
   if (error) throw error;
   /* Areas */
   var code2poly = {};
@@ -196,7 +194,6 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
   }
 
   var stadsdelen = buurten.features//topojson.feature(buurten, buurten)//.features;
-  console.log(api_data)
   // Draw the buurten
   svgmap.append("g")
          .attr('class', "zoom_g")
@@ -295,13 +292,44 @@ function ready(error, buurten, stad_poly, api_data, trammetrostations, treinstat
       .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}})
       .style("stroke", 'black')
       .on("click", function(d) {
-        console.log(d)
         document.querySelector("#legendUrl").innerHTML = `<a href="${d.url}" target="_blank"> Advertentie <a>`;
         document.querySelector("#legendUrl").style = 'fill:blue;'
         document.querySelector("#legendPrice").innerHTML = `Price: 	&euro;${d.price},-`;
         document.querySelector("#legendStreet").innerHTML = `${d.loc.substring(0, d.loc.length-9)}`;
         document.querySelector("#legendSize").innerHTML = `Size: ${d.size}m&sup2;`;
       });
-// console.log(inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0]))
-
 };
+
+function new_rooms(call){
+  d3.json(call, function(error, data2) {
+
+    var rooms =  document.querySelectorAll(".treinstations");
+
+    rooms.forEach(function() {
+      this.remove()
+    })
+
+
+    var station = d3.select(".zoom_g").selectAll(".treinstations")
+      .data(api_data.data)
+      .enter().append("circle")
+        .attr("transform", function(d)
+        { return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
+        .attr("id", function(d) {for (let i = 0; i < 7; i++){
+          if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
+          return Object.keys(code2poly)[i]
+        }}})
+        .attr("r", 5)
+        .on("mouseover", function(d) {colorDay(d.due_date)
+          for (let i = 0; i < 7; i++){if (inside_poly([d.lon, d.lat], code2poly[Object.keys(code2poly)[i]][0])){
+          document.querySelector(".topMapText").innerHTML = Object.keys(code2poly)[i]
+        }}})
+        .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}})
+        .style("stroke", 'black')
+        .on("click", function(d) {
+          document.querySelector("#legendUrl").innerHTML = `<a href="${d.url}" target="_blank"> Advertentie <a>`;
+          document.querySelector("#legendUrl").style = 'fill:blue;'
+          document.querySelector("#legendPrice").innerHTML = `Price: 	&euro;${d.price},-`;
+          document.querySelector("#legendStreet").innerHTML = `${d.loc.substring(0, d.loc.length-9)}`;
+          document.querySelector("#legendSize").innerHTML = `Size: ${d.size}m&sup2;`;
+  })})}

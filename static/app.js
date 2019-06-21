@@ -21,7 +21,6 @@ var title="Frequencie uploading";
       var dates = new Array();
       var values = new Array();
 
-      console.log(data)
       //parse the data
       data.forEach(function(d)    {
               dates.push(parseDate(d.date));
@@ -54,7 +53,6 @@ var title="Frequencie uploading";
               return d.key;
           })
           .attr("transform",function(d,i){
-            console.log(d,i)
               return "translate(0,"+(yOffset+((i*height+calY)))+")";
           })
 
