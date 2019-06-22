@@ -37,7 +37,8 @@ svg2.append("text")
    .text("uploads");
 
 
-d3.json("http://127.0.0.1:5000/hourly", function(error, data3) {
+// d3.json("http://127.0.0.1:5000/hourly", function(error, data3) {
+d3.json("http://api.foknet.nl/hourly", function(error, data3) {
 
 data2 = data3.data.histogram
 
@@ -92,7 +93,6 @@ data2 = data3.data.histogram
      .attr("y", function(d) { return y2(d.values); })
      .attr("height", function(d) { return height2 - y2(d.values); });
 
-console.log(data3.data.current)
  svg2.append("rect")
       .style("fill", "red")
       .attr("x", x2(data3.data.current.hour))
@@ -100,4 +100,14 @@ console.log(data3.data.current)
       .attr("y", y2(data3.data.current.value))
       .attr("height", height2 - y2(data3.data.current.value))
       .style("opacity", 0.5);
+
+  svg2.append("text")
+    .attr("x", x2(data3.data.current.hour))
+    .attr("y", y2(data3.data.current.value))
+    .attr("dy", "1.5em")
+    .attr("dx",  (width2/23)*0.5)
+    .attr("text-anchor", "middle")
+    .style("font-size", "8px")
+    .text("now")
+    .style("fill", 'white');
 });

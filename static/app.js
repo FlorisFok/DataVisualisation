@@ -15,7 +15,8 @@ var parseDate = d3.time.format("%d/%m/%y").parse;
 format = d3.time.format("%d-%m-%Y");
 toolDate = d3.time.format("%d/%b/%y");
 
-d3.json("http://127.0.0.1:5000/due_date", function(error, raw_data) {
+// d3.json("http://127.0.0.1:5000/due_date", function(error, raw_data) {
+d3.json("http://api.foknet.nl/due_date", function(error, raw_data) {
 
     var data = []
     for (let i = 0; i < raw_data.data.length; i++){

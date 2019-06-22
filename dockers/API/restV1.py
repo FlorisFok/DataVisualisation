@@ -102,17 +102,18 @@ def due_dates():
 def hour_histogram():
     conn = connect()
     mycursor = conn.cursor()
-    mycursor.execute("SELECT * FROM kamernet_log WHERE date BETWEEN '2019-06-14 00:00:00' AND '2019-06-18 23:59:59'")
+    mycursor.execute("SELECT * FROM kamernet_log")# WHERE date BETWEEN '2019-06-14 00:00:00' AND '2019-06-18 23:59:59'")
     all_data = mycursor.fetchall()
     d_hour = {}
     for i in all_data:
-        if i[2] == datetime.datetime(2019, 6, 21, 14, 45, 49):
+        if i[1] > 30:
             continue
         hour = i[2].hour
         if hour in d_hour:
-            d_hour[hour] += i[1]
+            d_hour[hour][0] += i[1]
+            d_hour[hour][1] += 1
         else:
-            d_hour[hour] = i[1]
+            d_hour[hour] = [i[1], 1]
 
     now = datetime.datetime.now() # current date and time
 
@@ -122,8 +123,9 @@ def hour_histogram():
     count = last[-1][1]
     hour = last[-1][2].hour
     hist_data = []
+
     for i in d_hour:
-        hist_data.append({'hours':i, 'values':int(d_hour[i]/4)})
+        hist_data.append({'hours':i, 'values':round((d_hour[i][0]/d_hour[i][1]), 2)})
 
     return jsonify({"data":
                     {'histogram': hist_data,
