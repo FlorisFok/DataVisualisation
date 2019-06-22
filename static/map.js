@@ -5,6 +5,9 @@ var svgmap = d3.select("#map"),
     width = +svgmap.attr("width"),
     height = +svgmap.attr("height");
 
+var layer1 = svgmap.append("g");
+var layer2 = svgmap.append("g");
+
 // Should really change this to 'clipExtent' instead of center
 var projection = d3.geoAlbers()
   .center([4.94, 52.349667])
@@ -22,20 +25,20 @@ var colorScale = d3.scaleOrdinal(d3.schemeCategory20)
     colorStadsdelen = d3.scaleOrdinal(d3.schemePastel2); //d3.schemeGreys
     colorLines = d3.scaleSequential(d3.schemeCategory20);
 
-svgmap.append("text")
+layer2.append("text")
   .attr("x", width - 120)
   .attr("y", 30)
   .attr("font-size", "large")
   .attr("text-decoration", "italic")
   .attr("font-weight", "bold")
   .text("Zoom & drag!");
-svgmap.append("text")
+layer2.append("text")
   .attr("x", width - 100)
   .attr("y", 60)
   .attr("class", "topMapText")
   .text("~");
 
-svgmap.append("text")
+layer2.append("text")
   .attr("x", 30)
   .attr("y", 30)
   .attr("font-size", "large")
@@ -43,7 +46,7 @@ svgmap.append("text")
   .attr("font-weight", "bold")
   .text("Legenda");
 
-svgmap.append("text")
+layer2.append("text")
   .attr("x", width/2)
   .attr("y", 20)
   .attr("font-size", "large")
@@ -51,25 +54,25 @@ svgmap.append("text")
   .attr("font-weight", "bold")
   .text("City of Amsterdam");
 
-svgmap.append("text")
+layer2.append("text")
   .attr("x", 30)
   .attr("y", height - 60)
   .attr("class", "small")
   .attr("id", "legendPrice")
   .text("Price");
-svgmap.append("text")
+layer2.append("text")
   .attr("x", 30)
   .attr("y", height - 45)
   .attr("class", "small")
   .attr("id", "legendSize")
   .text("Size");
-svgmap.append("text")
+layer2.append("text")
   .attr("x", 30)
   .attr("y", height - 30)
   .attr("class", "small")
   .attr("id", "legendStreet")
   .text("Street");
-svgmap.append("text")
+layer2.append("text")
   .attr("x", 30)
   .attr("y", height - 15)
   .attr("class", "small")
@@ -85,27 +88,27 @@ var spacingx = 55
 var previous_block = ''
 
 /*Legenda*/
-svgmap.append("circle")
+layer2.append("circle")
   .attr("class", "room")
   .attr("cx", x0 + 22)
   .attr("cy", y0 + spacingy * 1)
   .attr("r", 3)
   .style("fill", "green");
 
-svgmap.append("circle")
+layer2.append("circle")
   .attr("class", "room_temp")
   .attr("cx", x0 + 22)
   .attr("cy", y0 + spacingy * 2)
   .attr("r", 3)
   .style("fill", "red");
 
-svgmap.append("text")
+layer2.append("text")
   .attr("class", "label")
   .attr("x", spacingx + 5)
   .attr("y", y0 + spacingy * 1 + 5)
   .text("Onbepaalde tijd");
 
-svgmap.append("text")
+layer2.append("text")
   .attr("class", "label")
   .attr("x", spacingx + 5)
   .attr("y", y0 + spacingy * 2 + 5)
@@ -203,7 +206,7 @@ function ready(error, buurten, stad_poly, api_data) {
 
   var stadsdelen = buurten.features//topojson.feature(buurten, buurten)//.features;
   // Draw the buurten
-  svgmap.append("g")
+  layer1.append("g")
          .attr('class', "zoom_g")
          .selectAll(".buurt")
          .data(stadsdelen)
