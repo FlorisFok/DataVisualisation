@@ -8,6 +8,7 @@ import json
 from sklearn.svm import SVR
 import pandas as pd
 import numpy as np
+import datetime
 
 
 app = Flask(__name__)
@@ -80,6 +81,55 @@ def price_predict(commands):
 
     return jsonify({"price": list(price)[0]}), 200
 
+@app.route('/due_date', methods=["GET"])
+def due_dates():
+    conn = connect()
+    mycursor = conn.cursor()
+    mycursor.execute("Select count(*), due_date from kamernet group by due_date")
+    raw_data = mycursor.fetchall()
+
+    data = []
+    for raw in raw_data:
+        if raw[1].strftime("%Y") != '2019':
+            continue
+        data.append({'date':raw[1].strftime("%d/%m/%Y")[:-4]+'19', 'value':raw[0]})
+
+    return jsonify({"data":data}), 200
+
+
+
+@app.route('/hourly', methods=["GET"])
+def hour_histogram():
+    conn = connect()
+    mycursor = conn.cursor()
+    mycursor.execute("SELECT * FROM kamernet_log WHERE date BETWEEN '2019-06-14 00:00:00' AND '2019-06-18 23:59:59'")
+    all_data = mycursor.fetchall()
+    d_hour = {}
+    for i in all_data:
+        if i[2] == datetime.datetime(2019, 6, 21, 14, 45, 49):
+            continue
+        hour = i[2].hour
+        if hour in d_hour:
+            d_hour[hour] += i[1]
+        else:
+            d_hour[hour] = i[1]
+
+    now = datetime.datetime.now() # current date and time
+
+    date_time = now.strftime("%Y-%m-%d 00:00:00")
+    mycursor.execute("SELECT * FROM kamernet_log WHERE date>'{}'".format(date_time))
+    last = mycursor.fetchall()
+    count = last[-1][1]
+    hour = last[-1][2].hour
+    hist_data = []
+    for i in d_hour:
+        hist_data.append({'hours':i, 'values':int(d_hour[i]/4)})
+
+    return jsonify({"data":
+                    {'histogram': hist_data,
+                     "current":
+                        {"hour":hour,"value":count}
+                   }}), 200
 
 def connect():
     """ Connect to MySQL database """

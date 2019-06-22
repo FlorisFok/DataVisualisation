@@ -1,25 +1,31 @@
 var title="Frequencie uploading";
-  var units=" Uploads";
-  var breaks=[10,25,50,100];
-  var colours=["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"];
+var units=" Uploads";
+var breaks=[1,5,15,30];
+var colours=["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"];
 
-  //general layout information
-  var cellSize = 14;
-  var xOffset=20;
-  var yOffset=50;
-  var calY=15;//offset of calendar in each group
-  var calX=25;
-  var width = 960;
-  var height = 163;
-  var parseDate = d3.time.format("%d/%m/%y").parse;
-  format = d3.time.format("%d-%m-%Y");
-  toolDate = d3.time.format("%d/%b/%y");
+//general layout information
+var cellSize = 14;
+var xOffset=20;
+var yOffset=50;
+var calY=15;//offset of calendar in each group
+var calX=25;
+var width = 960;
+var height = 163;
+var parseDate = d3.time.format("%d/%m/%y").parse;
+format = d3.time.format("%d-%m-%Y");
+toolDate = d3.time.format("%d/%b/%y");
 
-  d3.csv("/data/calandar_data.csv", function(error, data) {
+d3.json("http://127.0.0.1:5000/due_date", function(error, raw_data) {
+
+    var data = []
+    for (let i = 0; i < raw_data.data.length; i++){
+      data.push({"date":raw_data.data[i].date, 'value':`${raw_data.data[i].value}`})
+    }
 
       //set up an array of all the dates in the data which we need to work out the range of the data
       var dates = new Array();
       var values = new Array();
+
 
       //parse the data
       data.forEach(function(d)    {
@@ -60,7 +66,8 @@ var title="Frequencie uploading";
       var rects = cals.append("g")
           .attr("id","alldays")
           .selectAll(".day")
-          .data(function(d) { return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
+          .data(function(d) {
+            return d3.time.days(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
           .enter().append("rect")
           .attr("id", function(d) {
               return "_"+format(d);
@@ -82,7 +89,8 @@ var title="Frequencie uploading";
           dayLabels.append("text")
           .attr("class","dayLabel")
           .attr("x",xOffset)
-          .attr("y",function(d) { return calY+(i * cellSize); })
+          .attr("y",function(d) {return calY+(i * cellSize); })
+          //{key: "2019", values: Array(52)}
           .attr("dy","0.9em")
           .text(d);
       })

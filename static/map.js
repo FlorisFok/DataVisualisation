@@ -301,16 +301,48 @@ function ready(error, buurten, stad_poly, api_data) {
 };
 
 function new_rooms(call){
-  d3.json(call, function(error, data2) {
 
-    var rooms =  document.querySelectorAll(".treinstations");
+  d3.queue()
+      .defer(d3.json, "../data/GEBIED_BUURTEN.json")
+      .defer(d3.json, "/data/GEBIED_STADSDELEN.json")
+      .defer(d3.json, call)
+      // .defer(d3.json, "http://api.foknet.nl/where/due_date+2019-06-18")
+      .await(ready)
 
-    rooms.forEach(function() {
-      this.remove()
+  function ready(error, buurten, stad_poly, api_data) {
+    if (error) throw error;
+
+    var rooms =  document.querySelectorAll("circle");
+
+    rooms.forEach(function(d) {
+      d.remove();
     })
 
+    svgmap = d3.select("#map");
 
-    var station = d3.select(".zoom_g").selectAll(".treinstations")
+    svgmap.append("circle")
+      .attr("class", "room")
+      .attr("cx", x0 + 22)
+      .attr("cy", y0 + spacingy * 1)
+      .attr("r", 3)
+      .style("fill", "green");
+
+    svgmap.append("circle")
+      .attr("class", "room_temp")
+      .attr("cx", x0 + 22)
+      .attr("cy", y0 + spacingy * 2)
+      .attr("r", 3)
+      .style("fill", "red");
+
+
+    var code2poly = {};
+    for (let i = 0; i < stad_poly.features.length; i++){
+      let poly = stad_poly.features[i].geometry.coordinates;
+      code2poly[stad_poly.features[i].properties.Stadsdeel] = poly;
+      // code2poly[stad_poly.features[i].properties.Stadsdeel_code] = poly;
+    }
+
+    var station = d3.select(".zoom_g").selectAll("circle")
       .data(api_data.data)
       .enter().append("circle")
         .attr("transform", function(d)
@@ -332,4 +364,47 @@ function new_rooms(call){
           document.querySelector("#legendPrice").innerHTML = `Price: 	&euro;${d.price},-`;
           document.querySelector("#legendStreet").innerHTML = `${d.loc.substring(0, d.loc.length-9)}`;
           document.querySelector("#legendSize").innerHTML = `Size: ${d.size}m&sup2;`;
-  })})}
+  })}}
+
+
+document.querySelector(".upper_form").onsubmit = function() {
+
+  let price_max = document.querySelector("input[name=price_max]").value;
+  let price_min = document.querySelector("input[name=price_min]").value;
+  let size = document.querySelector("input[name=size]").value;
+  let time = document.querySelector("select[name=time]").value;
+  let date = document.querySelector("select[name=date]").value;
+
+  if (!price_max || !price_min || !size || !time || !date){
+    alert("please fill in the form")
+  }
+  else if((isNaN(price_max)) || (isNaN(price_min)) || (isNaN(size))){
+    alert("please enter numbers")
+  }
+
+  if (date == '1'){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    date = "from" + yyyy + '$' + mm + '$' + dd;
+  }
+  else{
+    date = "from2000$00$00"
+  }
+
+  if (time == '-1'){
+    time = "-0"
+  }
+  else if(time == 1){
+    time = "-10"
+  }
+  else{
+    time = "=0"
+  }
+
+  let api_call = `http://api.foknet.nl/where/price+${price_min}&price-${price_max}&size+${size}&tijd${time}&due_date=${date}`
+  new_rooms(api_call)
+  return false
+}

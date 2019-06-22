@@ -30,20 +30,20 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <form class="upper_form">
-              <input type="text" name="price_min" value="Minimal price">
-              <input type="text" name="price_max" value="Maximal price">
-              <input type="text" name="size" value="size">
-              <input type="submit" name="" value="show">
-            </form>
-            <button class="show1">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <form class="second_uppper_form" style="text-align: right; width:50%">
-              <select class="" name="">
-                <option value="">All</option>
-                <option value="">last month</option>
+              <input type="text" name="price_min" placeholder="Minimal price">
+              <input type="text" name="price_max" placeholder="Maximal price">
+              <input type="text" name="size" placeholder="size">
+
+              <select name="time">
+                <option value="0">Temporary</option>
+                <option value="-1">Unlimited</option>
+                <option value="1">both</option>
               </select>
-              <input type="submit" name="" value="show">
+              <select name="date">
+                <option value="0">All</option>
+                <option value="1">Still avalable</option>
+              </select>
+              <input type="submit" name="" placeholder="show">
             </form>
         </nav>
 

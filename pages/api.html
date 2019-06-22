@@ -27,31 +27,68 @@
         </nav>
 
         <div class="container">
-          <h2>Constrains</h2>
-          <form class="upper_form">
-            <div>
-              <input class="input_form" type="text" name="price_min" value="Minimal price">
-              <input class="input_form" type="text" name="price_max" value="Maximal price">
-            </div>
-            <div>
-              <input class="input_form" type="text" name="size" value="size">
-              <select class="input_form">
-                <option value="0">Tijdelijk</option>
-                <option value="-1">Onbepaalde tijd</option>
-              </select>
-            </div>
-            <div>
-              <input class="input_form" type="date" name="" value="">
-              <b> Till </b>
-              <input class="input_form" type="date" name="" value="">
-            </div>
+          <h2>Get your data</h2>
+          <form class="api_form">
+            <input type="text" name="price_min" placeholder="Minimal price">
+            <input type="text" name="price_max" placeholder="Maximal price">
+            <input type="text" name="size" placeholder="size">
 
-
-
-
-            <input type="submit" name="" value="show">
+            <select name="time">
+              <option value="0">Temporary</option>
+              <option value="-1">Unlimited</option>
+              <option value="1">both</option>
+            </select>
+            <select name="date">
+              <option value="0">All</option>
+              <option value="1">Still avalable</option>
+            </select>
+            <input type="submit" name="" placeholder="show">
           </form>
         </div>
+        <a class="emptyA" href="https://www.w3schools.com" target="_blank"></a>
+      <script type="text/javascript">
+      document.querySelector(".api_form").onsubmit = function() {
+
+        let price_max = document.querySelector("input[name=price_max]").value;
+        let price_min = document.querySelector("input[name=price_min]").value;
+        let size = document.querySelector("input[name=size]").value;
+        let time = document.querySelector("select[name=time]").value;
+        let date = document.querySelector("select[name=date]").value;
+
+        if (!price_max || !price_min || !size || !time || !date){
+          alert("please fill in the form")
+        }
+        else if((isNaN(price_max)) || (isNaN(price_min)) || (isNaN(size))){
+          alert("please enter numbers")
+        }
+
+        if (date == '1'){
+          var today = new Date();
+          var dd = String(today.getDate()).padStart(2, '0');
+          var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+          var yyyy = today.getFullYear();
+
+          date = "from" + yyyy + '$' + mm + '$' + dd;
+        }
+        else{
+          date = "from2000$00$00"
+        }
+
+        if (time == '-1'){
+          time = "-0"
+        }
+        else if(time == 1){
+          time = "-10"
+        }
+        else{
+          time = "=0"
+        }
+
+        let api_call = `http://api.foknet.nl/where/price+${price_min}&price-${price_max}&size+${size}&tijd${time}&due_date=${date}`
+        window.location.href = api_call;
+        return false
+      }
+      </script>
     </body>
 
 </html>

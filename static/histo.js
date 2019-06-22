@@ -1,22 +1,10 @@
 
-var margin2 = {top: 20, right: 20, bottom: 50, left: 50},
+var margin2 = {top: 40, right: 20, bottom: 50, left: 50},
    width2 = 500 - margin2.left - margin2.right,
    height2 = 200 - margin2.top - margin2.bottom;
 
 // Parse the date / time
 var	parseDate2 = d3.isoParse
-
-var x2 = d3.scaleBand().rangeRound([0, width2], .05).padding(0.1);
-
-var y2 = d3.scaleLinear().range([height2, 0]);
-
-var xAxis2 = d3.axisBottom()
-   .scale(x2)
-   .tickFormat(d3.timeFormat("%Y-%m-%d"));
-
-var yAxis2 = d3.axisLeft()
-   .scale(y2)
-   .ticks(10);
 
 var svg2 = d3.select("#histo")
    .attr("width", width2 + margin2.left + margin2.right)
@@ -25,15 +13,55 @@ var svg2 = d3.select("#histo")
    .attr("transform",
          "translate(" + margin2.left + "," + margin2.top + ")");
 
-d3.csv("/data/bar-data.csv", function(error, data2) {
+svg2.append("text")
+   .attr("x", width2/2)
+   .attr("y", 0)
+   .attr("dy", "-0.5em")
+   .attr("font-weight", "bold")
+   .attr("text-anchor", "middle")
+   .text("Avarage uploads/hour");
 
-   data2.forEach(function(d) {
-       d.date = parseDate2(d.date);
-       d.value = +d.value;
-   });
+svg2.append("text")
+  .attr("x", width2/2)
+  .attr("y", height2)
+  .attr("dy", "2em")
+  .attr("text-anchor", "middle")
+  .text("hour");
 
- x2.domain(data2.map(function(d) { return d.date; }));
- y2.domain([0, d3.max(data2, function(d) { return d.value; })]);
+svg2.append("text")
+   .attr("x",  height2/2)
+   .attr("y", 0)
+   .attr("dy", "2em")
+   .attr("text-anchor", "middle")
+   .attr("transform", "rotate(-90)")
+   .text("uploads");
+
+
+d3.json("http://127.0.0.1:5000/hourly", function(error, data3) {
+
+data2 = data3.data.histogram
+
+ let max = 0;
+ for (let i = 0; i < data2.length; i++){
+   if (max < data2[i].values){
+     max = data2[i].values
+   }
+ }
+ var x2 = d3.scaleLinear()
+                .domain([0, 23])
+                .range([0, width2]);
+
+ var y2 = d3.scaleLinear()
+                .domain([0, max])
+                .range([height2, 0]);
+
+  var xAxis2 = d3.axisBottom()
+     .scale(x2)
+     .ticks(23);
+
+  var yAxis2 = d3.axisLeft()
+     .scale(y2)
+     .ticks(5);
 
  svg2.append("g")
      .attr("class", "x axis")
@@ -59,9 +87,17 @@ d3.csv("/data/bar-data.csv", function(error, data2) {
      .data(data2)
    .enter().append("rect")
      .style("fill", "steelblue")
-     .attr("x", function(d) { return x2(d.date); })
-     .attr("width", x2.bandwidth())
-     .attr("y", function(d) { return y2(d.value); })
-     .attr("height", function(d) { return height2 - y2(d.value); });
+     .attr("x", function(d) { return x2(d.hours); })
+     .attr("width", width2/23)
+     .attr("y", function(d) { return y2(d.values); })
+     .attr("height", function(d) { return height2 - y2(d.values); });
 
+console.log(data3.data.current)
+ svg2.append("rect")
+      .style("fill", "red")
+      .attr("x", x2(data3.data.current.hour))
+      .attr("width", width2/23)
+      .attr("y", y2(data3.data.current.value))
+      .attr("height", height2 - y2(data3.data.current.value))
+      .style("opacity", 0.5);
 });
