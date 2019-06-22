@@ -7,7 +7,7 @@ var svgmap = d3.select("#map"),
 
 // Should really change this to 'clipExtent' instead of center
 var projection = d3.geoAlbers()
-  .center([4.9, 52.349667])
+  .center([4.94, 52.349667])
   .parallels([51.5, 51.49])
   .rotate(120)
   .scale(190000)
@@ -42,6 +42,14 @@ svgmap.append("text")
   .attr("text-decoration", "underline")
   .attr("font-weight", "bold")
   .text("Legenda");
+
+svgmap.append("text")
+  .attr("x", width/2)
+  .attr("y", 20)
+  .attr("font-size", "large")
+  .attr("text-anchor", "middle")
+  .attr("font-weight", "bold")
+  .text("City of Amsterdam");
 
 svgmap.append("text")
   .attr("x", 30)
@@ -202,7 +210,7 @@ function ready(error, buurten, stad_poly, api_data) {
         .enter().insert("g")
           .on("wheel.zoom",function(){
               var currScale = projection.scale();
-              var newScale = currScale - 30*event.deltaY;
+              var newScale = currScale - 100*event.deltaY;
               var currTranslate = projection.translate();
               var coords = projection.invert([event.offsetX, event.offsetY]);
               projection.scale(newScale);
@@ -344,7 +352,10 @@ function new_rooms(call){
 
     var station = d3.select(".zoom_g").selectAll("circle")
       .data(api_data.data)
-      .enter().append("circle")
+      .enter()
+      .append("circle")
+      // .transition()  // Transition from old to new
+      //   .duration(1000)  // Length of animation
         .attr("transform", function(d)
         { return "translate(" + projection([d["lon"], d["lat"]]) + ")"; })
         .attr("id", function(d) {for (let i = 0; i < 7; i++){

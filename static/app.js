@@ -1,4 +1,4 @@
-var title="Frequencie uploading";
+var title="Rooms available";
 var units=" Uploads";
 var breaks=[1,5,15,30];
 var colours=["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"];

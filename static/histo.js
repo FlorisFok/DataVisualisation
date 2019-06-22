@@ -29,9 +29,9 @@ svg2.append("text")
   .text("hour");
 
 svg2.append("text")
-   .attr("x",  height2/2)
+   .attr("x",  -height2/2)
    .attr("y", 0)
-   .attr("dy", "2em")
+   .attr("dy", "-1.5em")
    .attr("text-anchor", "middle")
    .attr("transform", "rotate(-90)")
    .text("uploads");
