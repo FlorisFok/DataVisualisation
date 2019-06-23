@@ -89,14 +89,14 @@ data2 = data3.data.histogram
    .enter().append("rect")
      .style("fill", "steelblue")
      .attr("x", function(d) { return x2(d.hours); })
-     .attr("width", width2/23)
+     .attr("width", width2/30)
      .attr("y", function(d) { return y2(d.values); })
      .attr("height", function(d) { return height2 - y2(d.values); });
 
  svg2.append("rect")
       .style("fill", "red")
       .attr("x", x2(data3.data.current.hour))
-      .attr("width", width2/23)
+      .attr("width", width2/30)
       .attr("y", y2(data3.data.current.value))
       .attr("height", height2 - y2(data3.data.current.value))
       .style("opacity", 0.5);
@@ -105,7 +105,7 @@ data2 = data3.data.histogram
     .attr("x", x2(data3.data.current.hour))
     .attr("y", y2(data3.data.current.value))
     .attr("dy", "1.5em")
-    .attr("dx",  (width2/23)*0.5)
+    .attr("dx",  (width2/30)*0.5)
     .attr("text-anchor", "middle")
     .style("font-size", "8px")
     .text("now")

@@ -57,6 +57,28 @@ def save_log(mycursor, count):
     mycursor.execute(call)
     return call
 
+def send_text(mycursor, count):
+    if count == 0:
+        return False
+
+    apikey = "pv2qrvPYWFo-oeTduhVKH3uQlFt7lpOrIcFKtlPrhX"
+    address = "http://api.txtlocal.com/send/?"
+    if count > 1:
+        message = "their are {} new rooms".format(count)
+    else:
+        message = "their is one new room"
+    message = message.replace(' ','+').lower()
+    sender = "RoboFloris"
+    mycursor.execute("SELECT * FROM kamernet_sms")
+    persons = mycursor.fetchall()
+
+    numbers = ''
+    for num in persons:
+        numbers = numbers + num[1] + '+'
+
+    url = address + "apikey=" + apikey + "&numbers=" + numbers[:-1] + "&message=" + message + "&sender=" + sender
+    response = requests.get(url)
+
 def cal_t_left(then, now):
     '''
     Calculate time differnence
@@ -159,12 +181,13 @@ def save(e, file):
             print(x)
 
     save_log(mycursor, new)
+    send_text(mycursor, count)
     conn.commit()
 
 tl = Timeloop()
 
 @tl.job(interval=timedelta(hours=1))
-def sample_job_every_5s():
+def sample_job_every_hour():
     all_data, file = run()
     save(all_data, file)
 
