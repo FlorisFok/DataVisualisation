@@ -57,6 +57,18 @@ def where_command(commands):
 
     return jsonify({"data": data}), 200
 
+@app.route('/number/<commands>', methods=["GET"])
+def Number_signup(commands):
+    info = commands.split("+")
+
+    conn.commit()
+    conn = connect()
+    mycursor = conn.cursor()
+    mycursor.execute("INSERT INTO kamernet_sms (name, number, price_min, price_max) VALUES ('{}', '{}', 0, 750);".fomrat(info[0], info[1]))
+    conn.commit()
+
+    return jsonify({"data": data}), 200
+
 @app.route('/loc/<range>/<commands>', methods=["GET"])
 def location(range, commands):
 
@@ -65,7 +77,8 @@ def location(range, commands):
 
     new_data = []
     for piece in data:
-        dinstance = ((abs(piece['lat'] - CENTER[0]))**2 + (abs(piece['lon']-CENTER[1]))**2)**0.5
+        dinstance = ((abs(piece['lat'] - CENTER[0]))**2 +
+                     (abs(piece['lon']-CENTER[1]))**2)**0.5
         if (int(range) > dinstance*111):
             new_data.append(piece)
 
@@ -92,7 +105,8 @@ def due_dates():
     for raw in raw_data:
         if raw[1].strftime("%Y") != '2019':
             continue
-        data.append({'date':raw[1].strftime("%d/%m/%Y")[:-4]+'19', 'value':raw[0]})
+        data.append({'date':raw[1].strftime("%d/%m/%Y")[:-4]+'19',
+                     'value':raw[0]})
 
     return jsonify({"data":data}), 200
 
