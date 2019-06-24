@@ -68,6 +68,17 @@ def Number_signup(commands):
     conn.commit()
     return jsonify({"data": True}), 200
 
+@app.route('/removenumber/<commands>', methods=["GET"])
+def Number_remove(commands):
+    info = commands.split("+")
+
+    conn = connect()
+    mycursor = conn.cursor()
+
+    mycursor.execute("DELETE FROM kamernet_sms WHERE name='{}' AND number='{}'".format(info[0], info[1]))
+    conn.commit()
+    return jsonify({"data": True}), 200
+
 @app.route('/loc/<range>/<commands>', methods=["GET"])
 def location(range, commands):
 
