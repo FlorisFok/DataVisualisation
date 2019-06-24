@@ -61,13 +61,12 @@ def where_command(commands):
 def Number_signup(commands):
     info = commands.split("+")
 
-    conn.commit()
     conn = connect()
     mycursor = conn.cursor()
-    mycursor.execute("INSERT INTO kamernet_sms (name, number, price_min, price_max) VALUES ('{}', '{}', 0, 750);".fomrat(info[0], info[1]))
-    conn.commit()
 
-    return jsonify({"data": data}), 200
+    mycursor.execute("INSERT INTO kamernet_sms (name, number, price_min, price_max) VALUES ('{}', '{}', 0, 750);".format(info[0], info[1]))
+    conn.commit()
+    return jsonify({"data": True}), 200
 
 @app.route('/loc/<range>/<commands>', methods=["GET"])
 def location(range, commands):
