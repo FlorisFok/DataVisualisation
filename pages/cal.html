@@ -27,17 +27,35 @@
         </nav>
 
         <div class="container">
-          <h1>Get your price prediction</h2>
-          <form class="api_form">
-            <input type="text" name="lat" placeholder="lat">
-            <input type="text" name="lon" placeholder="lon">
-            <input type="text" name="size" placeholder="size">
-            <input type="submit" name="" placeholder="show">
-          </form>
+          <h4 style='padding-top:100px; padding-bottom:100px;'>
+            It looks like magic, but it's a Regression model. Trained on the data from the database.
+            Please enter the size in square meters, latitude and longitude of your future room or room you want to subrent.
+            When you submit these number, we will provide our best guess.
+          </h4>
+          <div class="row">
+            <div class="col-6">
+              <h1 style="text-align: center;">Predict the price</h2>
+              <form class="api_form">
+                <p>
+                  <input type="text" name="lat" placeholder="lat">
+                </p>
+                <p>
+                  <input type="text" name="lon" placeholder="lon">
+                </p>
+                <p>
+                  <input type="text" name="size" placeholder="size">
+                </p>
+                <p>
+                  <input type="submit" name="" placeholder="show">
+                </p>
+              </form>
+            <a class="emptyA" href="https://www.w3schools.com" target="_blank"></a>
+            <h2 class="price_result"></h2>
+            </div>
+          <div class="col-6">
+            <img src="https://media.giphy.com/media/21I1WOUDnct4EmSNa6/giphy.gif" alt="Smiley face" height="300" width="400">
+          </div>
         </div>
-        <a class="emptyA" href="https://www.w3schools.com" target="_blank"></a>
-        <div class="container">
-          <h2 class="price_result"></h2>
         </div>
       <script type="text/javascript">
       document.querySelector(".api_form").onsubmit = function() {
@@ -64,7 +82,7 @@
         function reqListener () {
           var api_data = JSON.parse(this.responseText);
           console.log(api_data)
-          document.querySelector('.price_result').innerHTML = `${api_data.price} euro`;
+          document.querySelector('.price_result').innerHTML = `${Math.round(api_data.price)} euro`;
         }
         var oReq = new XMLHttpRequest();
         oReq.addEventListener('load', reqListener);

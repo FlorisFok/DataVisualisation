@@ -146,7 +146,10 @@ def save(e, file):
             if 'Kamer' in l[2]:
                 l.pop(0)
 
-            loc = l[0].strip()[2:]
+            loc = l[0].strip()
+            if loc[1].isdigit():
+                loc = loc[2:]
+                
             price = (int(''.join([i for i in l[1] if i.isdigit()])))
             incl = (('incl' in l[2]))
 

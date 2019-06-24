@@ -29,6 +29,10 @@ body{
   padding:20px;
 }
 
+.price_result{
+  text-align: center;
+}
+
 /* Vizual styles */
 .all-svg{
   margin: 20px;
@@ -84,8 +88,10 @@ table {
   border-collapse: collapse;
 }
 
-table, th, td {
-  border: 1px solid black;
+th, td {
+  border-bottom: 2px solid black;
+  font-style: italic;
+  padding: 5px;
 }
 
 

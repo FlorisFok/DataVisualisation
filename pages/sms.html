@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <title>Roqeust</title>
+
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-md navbar-light bg-light border">
+            <a class="navbar-brand" href="/index.html">BACK</a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>
+
+        <div class="container">
+          <h4 style='padding-top:100px; padding-bottom:100px;'>
+            If you sign up, I will send you a text when we found new rooms.
+            It only sends a text if it has something new, and it's checking it
+            hourly. Maybe in future updates there is a less spammy version.
+            [ The free trail stopped so unfortunatly it doesnt work any more.]
+          </h4>
+          <div class="row">
+            <div class="col-6">
+              <h2>Sign up</h2>
+              <form onsubmit="return add_number()">
+                  <input type="text" name="name" placeholder="Full name">
+                  <input type="text" name="number" placeholder="06 number">
+
+                  <input type="submit" name="" placeholder="show">
+              </form>
+              <p></p>
+              <h2>Remove me</h2>
+              <form onsubmit="return add_number()">
+                  <input type="text" name="name2" placeholder="Full name">
+                  <input type="text" name="number2" placeholder="06 number">
+
+                  <input type="submit" name="" placeholder="show">
+              </form>
+            </div>
+          <div class="col-6">
+            <img src="https://media.giphy.com/media/l2SpVoERz5uzzBjkQ/giphy.gif" alt="Smiley face" height="300" width="400">
+          </div>
+        </div>
+        </div>
+
+    </body>
+    <script>
+      function add_number() {
+        function reqListener () {
+          // console.log(this.responseText['data'])
+          var api_data = JSON.parse(this.responseText);
+          console.log(api_data)
+          if (api_data.data){
+            alert("succes")
+          }
+          else{
+            alert("Something went wrong")
+          }
+        }
+
+        let name = document.querySelector("input[name=name]").value;
+        let number = document.querySelector("input[name=number]").value;
+        let name2 = document.querySelector("input[name=name2]").value;
+        let number2 = document.querySelector("input[name=number2]").value;
+
+        if (!name || !number || isNaN(number2) ) {
+          var url = `http://api.foknet.nl/removenumber/${name2}+${number2}`;
+          console.log("remove")
+        }
+        else if (!name2 || !number2 || isNaN(number)) {
+          var url = `http://api.foknet.nl/number/${name}+${number}`;
+          console.log("add");
+        }
+        else{
+          alert("Please fill in both forms and only use numbers")
+        }
+
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener('load', reqListener);
+        oReq.open("get", url, true);
+        oReq.send();
+        return false
+      }
+    </script>
+</html>
