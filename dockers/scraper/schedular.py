@@ -181,7 +181,7 @@ def save(e, file):
             print(x)
 
     save_log(mycursor, new)
-    send_text(mycursor, count)
+    send_text(mycursor, new)
     conn.commit()
 
 tl = Timeloop()
