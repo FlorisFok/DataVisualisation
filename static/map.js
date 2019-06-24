@@ -303,10 +303,11 @@ function ready(error, buurten, stad_poly, api_data) {
       .style('fill',function(d) {if (d.tijd == -1){return 'green'} else{return 'red'}})
       .style("stroke", 'black')
       .on("click", function(d) {
+        console.log(d)
         document.querySelector("#legendUrl").innerHTML = `<a href="${d.url}" target="_blank"> Advertentie <a>`;
         document.querySelector("#legendUrl").style = 'fill:blue;'
         document.querySelector("#legendPrice").innerHTML = `Price: 	&euro;${d.price},-`;
-        document.querySelector("#legendStreet").innerHTML = `${d.loc.substring(0, d.loc.length-9)}`;
+        document.querySelector("#legendStreet").innerHTML = `${d.loc}`;
         document.querySelector("#legendSize").innerHTML = `Size: ${d.size}m&sup2;`;
       });
 };
