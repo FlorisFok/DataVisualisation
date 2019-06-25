@@ -62,3 +62,42 @@ Hackethon in Eindhoven
 
 # day 12
 * tried to make the map zoomable, but the circles wont move.... Failed
+* joking, it works now
+* more fancy click stuff
+
+# day 13
+* More interaction
+* more pages
+* editing the api
+* price prediction model
+
+# day 14
+* Custom made homepage
+* more css
+* adding pictures
+
+# day 15
+* debugging the api
+* scraper stopped for a few dayes appertly, fuck
+* cleaning data, adding anothr histogram
+* working on contact page, must check out.
+
+# weekend 3
+* party party
+
+# day 16
+* SMS service
+* Average price + location mapping
+* cleaning code
+* crashing the server a few times
+
+# day 17
+* Adding some text to pages
+* Adding comments
+* cleaning github 
+* make site puplic and test
+* check [site](http://app.foknet.nl/)
+
+# deadline day
+* testing
+* testing
