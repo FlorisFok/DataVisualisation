@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import datetime
 
+
 # Setup the API to work Cross orgin and behind a proxy
 app = Flask(__name__)
 app.config['REVERSE_PROXY_PATH'] = '/foo'
@@ -21,19 +22,22 @@ CENTER = (52.367612, 4.893884)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    '''
+    Just return allllll data and test with jsons
+    '''
     if (request.method == 'POST'):
         some_json = request.get_json()
         return jsonify({"you sent":some_json}), 201
     else:
         return jsonify({"data":get_full_json()}), 200
 
-# Get last <num>  uploads
+# Get last <num>  uploads, NOT IN USE FOR PROJECT
 @app.route('/last/<int:num>',methods=["GET"])
 def choose_random(num):
     data = get_full_json()
     return jsonify({"data": data[-num:]}), 200
 
-# Get certain columns
+# Get certain columns, NOT IN USE FOR PROJECT
 @app.route('/<column>',methods=["GET"])
 def roll_dice(column):
     cols = column.split('+')
@@ -55,35 +59,50 @@ def roll_dice(column):
 
 @app.route('/where/<commands>', methods=["GET"])
 def where_command(commands):
+    '''
+    Execute Where commands using my own made up syntax
+    '''
     calls = commands_parser(commands)
     data = get_where_json(calls)
 
     return jsonify({"data": data}), 200
 
+
 @app.route('/number/<commands>', methods=["GET"])
 def Number_signup(commands):
+    '''
+    Add number to text database
+    '''
     info = commands.split("+")
 
     conn = connect()
     mycursor = conn.cursor()
 
-    mycursor.execute("INSERT INTO kamernet_sms (name, number, price_min, price_max) VALUES ('{}', '{}', 0, 750);".format(info[0], info[1]))
+    mycursor.execute("INSERT INTO kamernet_sms (name, number, price_min, price_max) VALUES ('{}', '{}', 0, 750);"
+                .format(info[0], info[1]))
     conn.commit()
     return jsonify({"data": True}), 200
 
 @app.route('/removenumber/<commands>', methods=["GET"])
 def Number_remove(commands):
+    '''
+    Remove number from text database
+    '''
     info = commands.split("+")
 
     conn = connect()
     mycursor = conn.cursor()
 
-    mycursor.execute("DELETE FROM kamernet_sms WHERE name='{}' AND number='{}'".format(info[0], info[1]))
+    mycursor.execute("DELETE FROM kamernet_sms WHERE name='{}' AND number='{}'"
+                .format(info[0], info[1]))
     conn.commit()
     return jsonify({"data": True}), 200
 
 @app.route('/loc/<range>/<commands>', methods=["GET"])
 def location(range, commands):
+    '''
+    returns only rooms that are within a certain range (km) circle from CENTER
+    '''
 
     calls = commands_parser(commands)
     data = get_where_json(commands)
@@ -92,6 +111,8 @@ def location(range, commands):
     for piece in data:
         dinstance = ((abs(piece['lat'] - CENTER[0]))**2 +
                      (abs(piece['lon']-CENTER[1]))**2)**0.5
+
+        # 111 is the differnence between 1 km and 1 degree +-
         if (int(range) > dinstance*111):
             new_data.append(piece)
 
@@ -99,9 +120,14 @@ def location(range, commands):
 
 @app.route('/predict/<commands>', methods=["GET"])
 def price_predict(commands):
+    '''
+    Very bad prediction of the price, but fun to make
+    '''
     vars = commands.split("&")
     vars = [float(i.replace('+','.')) for i in vars]
-    ## lat, lon, size, tijd
+    # help: vars = [lat, lon, size, tijd]
+
+    # this makes a prediction
     price = predict_price(vars[0], vars[1], vars[2], vars[3])
 
 
@@ -109,6 +135,9 @@ def price_predict(commands):
 
 @app.route('/due_date', methods=["GET"])
 def due_dates():
+    '''
+    Returns all the due dates for the calander
+    '''
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute("Select count(*), due_date from kamernet group by due_date")
@@ -116,8 +145,10 @@ def due_dates():
 
     data = []
     for raw in raw_data:
+        # Only 2019 support
         if raw[1].strftime("%Y") != '2019':
             continue
+        # Parse data in usable format
         data.append({'date':raw[1].strftime("%d/%m/%Y")[:-4]+'19',
                      'value':raw[0]})
 
@@ -127,10 +158,15 @@ def due_dates():
 
 @app.route('/hourly', methods=["GET"])
 def hour_histogram():
+    '''
+    Returns the data for the hour histogram
+    '''
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute("SELECT * FROM kamernet_log")
     all_data = mycursor.fetchall()
+
+    # Make hour avarage
     d_hour = {}
     for i in all_data:
         if i[1] > 30:
@@ -142,17 +178,24 @@ def hour_histogram():
         else:
             d_hour[hour] = [i[1], 1]
 
+    # Time stamp
     now = datetime.datetime.now()
-
     date_time = now.strftime("%Y-%m-%d 00:00:00")
-    mycursor.execute("SELECT * FROM kamernet_log WHERE date>'{}'".format(date_time))
+
+    # Get this days data --> currently using only last one
+    mycursor.execute("SELECT * FROM kamernet_log WHERE date>'{}'"
+                .format(date_time))
     last = mycursor.fetchall()
     count = last[-1][1]
     hour = last[-1][2].hour
     hist_data = []
 
+    # Parse data and return
     for i in d_hour:
-        hist_data.append({'hours':i, 'values':round((d_hour[i][0]/d_hour[i][1]), 2)})
+        # I recently found out the date on my server is 2 hours behind....
+        HOURS_BIHIND = 2
+        hist_data.append({'hours':(i+HOURS_BIHIND)%24,
+                          'values':round((d_hour[i][0]/d_hour[i][1]), 2)})
 
     return jsonify({"data":
                     {'histogram': hist_data,
@@ -176,6 +219,9 @@ def connect():
     return conn
 
 def get_full_json(col = '*'):
+    '''
+    Just fetch everything
+    '''
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute('''SELECT '''+ col +''' FROM kamernet''')
@@ -185,48 +231,64 @@ def get_full_json(col = '*'):
     return json_data
 
 def get_where_json(commands):
-    print(commands)
+    '''
+    Fetch every thing where ....
+    '''
     conn = connect()
     mycursor = conn.cursor()
     call = '''SELECT * FROM kamernet'''
     call = call + " WHERE"
+
     for com in commands:
         call = call + com + 'AND'
+
     call = call[:-4]
     mycursor.execute(call)
     row_headers=[x[0] for x in mycursor.description]
     rv = mycursor.fetchall()
+
     json_data = make_json(row_headers, rv)
     return json_data
 
 def predict_price(lat, lon, size, tijd):
+    '''
+    Price prediction machine learning magic!
+    '''
+    # Get data from mysql
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute('''SELECT * FROM kamernet''')
+
+    # PArse data into json
     row_headers=[x[0] for x in mycursor.description]
     rv = mycursor.fetchall()
-
     json_data = make_json(row_headers, rv)
 
+    # prepare data
     df = pd.DataFrame(json_data)
     df_dropped = df.drop(['loc', 'url', 'start_date', 'id', 'due_date'], 1)
-
     x = np.array(df_dropped.drop(['price'],1))
-
     df_dropped.dropna(inplace=True)
     y = np.array(df_dropped['price'])
 
+    # Make Regression model
     clf = SVR(kernel='rbf',
               C=100, gamma='auto',
               degree=3,
               epsilon=.1,
               coef0=1)
 
+    # Train Regression model
     clf.fit(x, y)
+
+    # Predict with the new data
     price = clf.predict(np.array([[lat, lon, size, tijd]]))
     return price
 
 def make_json(row_headers, data):
+    '''
+    Make a json from the sql list in list
+    '''
     json_data=[]
     for result in data:
         result = list(result)
@@ -236,16 +298,25 @@ def make_json(row_headers, data):
     return json_data
 
 def from_date(arg, year, month, day):
+    '''
+    Date format function
+    '''
     date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
     call = " {} >='{}' ".format(arg, date_time)
     return call
 
 def till_date(arg, year, month, day):
+    '''
+    Date format function
+    '''
     date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
     call = " {} <='{}' ".format(arg, date_time)
     return call
 
 def periods(arg, year, month, day, year2, month2, day2):
+    '''
+    Date format function
+    '''
     date_time = "{Y}-{m}-{d} 00:00:00".format(Y=year, m=month, d=day)
     date_time2 = "{Y}-{m}-{d} 00:00:00".format(Y=year2, m=month2, d=day2)
 
@@ -253,6 +324,10 @@ def periods(arg, year, month, day, year2, month2, day2):
     return call
 
 def commands_parser(raw_url):
+    '''
+    Universal, but unique command parser :D
+    returns list of calls - no string
+    '''
     commands = raw_url.split("&")
     calls = []
     for com in commands:
