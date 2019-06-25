@@ -10,12 +10,13 @@ import pandas as pd
 import numpy as np
 import datetime
 
-
+# Setup the API to work Cross orgin and behind a proxy
 app = Flask(__name__)
 app.config['REVERSE_PROXY_PATH'] = '/foo'
 ReverseProxyPrefixFix(app)
 CORS(app)
 
+# Center of Amsterdam
 CENTER = (52.367612, 4.893884)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -26,11 +27,13 @@ def index():
     else:
         return jsonify({"data":get_full_json()}), 200
 
+# Get last <num>  uploads
 @app.route('/last/<int:num>',methods=["GET"])
 def choose_random(num):
     data = get_full_json()
     return jsonify({"data": data[-num:]}), 200
 
+# Get certain columns
 @app.route('/<column>',methods=["GET"])
 def roll_dice(column):
     cols = column.split('+')
@@ -126,7 +129,7 @@ def due_dates():
 def hour_histogram():
     conn = connect()
     mycursor = conn.cursor()
-    mycursor.execute("SELECT * FROM kamernet_log")# WHERE date BETWEEN '2019-06-14 00:00:00' AND '2019-06-18 23:59:59'")
+    mycursor.execute("SELECT * FROM kamernet_log")
     all_data = mycursor.fetchall()
     d_hour = {}
     for i in all_data:
@@ -139,7 +142,7 @@ def hour_histogram():
         else:
             d_hour[hour] = [i[1], 1]
 
-    now = datetime.datetime.now() # current date and time
+    now = datetime.datetime.now()
 
     date_time = now.strftime("%Y-%m-%d 00:00:00")
     mycursor.execute("SELECT * FROM kamernet_log WHERE date>'{}'".format(date_time))
@@ -176,7 +179,7 @@ def get_full_json(col = '*'):
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute('''SELECT '''+ col +''' FROM kamernet''')
-    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
+    row_headers=[x[0] for x in mycursor.description]
     rv = mycursor.fetchall()
     json_data = make_json(row_headers, rv)
     return json_data
@@ -191,7 +194,7 @@ def get_where_json(commands):
         call = call + com + 'AND'
     call = call[:-4]
     mycursor.execute(call)
-    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
+    row_headers=[x[0] for x in mycursor.description]
     rv = mycursor.fetchall()
     json_data = make_json(row_headers, rv)
     return json_data
@@ -200,7 +203,7 @@ def predict_price(lat, lon, size, tijd):
     conn = connect()
     mycursor = conn.cursor()
     mycursor.execute('''SELECT * FROM kamernet''')
-    row_headers=[x[0] for x in mycursor.description] # this will extract row headers
+    row_headers=[x[0] for x in mycursor.description]
     rv = mycursor.fetchall()
 
     json_data = make_json(row_headers, rv)

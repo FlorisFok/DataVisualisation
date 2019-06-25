@@ -18,6 +18,7 @@
     </head>
 
     <body>
+      <!-- Top menu with back button -->
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
             <a class="navbar-brand" href="/index.html">BACK</a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -25,6 +26,7 @@
             </button>
         </nav>
 
+        <!-- Info text -->
         <div class="container">
           <h4 style='padding-top:100px; padding-bottom:100px;'>
             If you sign up, I will send you a text when we found new rooms.
@@ -32,6 +34,7 @@
             hourly. Maybe in future updates there is a less spammy version.
             [ The free trail stopped so unfortunatly it doesnt work any more.]
           </h4>
+          <!-- Sign up form and delete form -->
           <div class="row">
             <div class="col-6">
               <h2>Sign up</h2>
@@ -60,9 +63,8 @@
     <script>
       function add_number() {
         function reqListener () {
-          // console.log(this.responseText['data'])
+          // Check if api recieved it well
           var api_data = JSON.parse(this.responseText);
-          console.log(api_data)
           if (api_data.data){
             alert("succes")
           }
@@ -71,27 +73,33 @@
           }
         }
 
+        // Get values of the form
         let name = document.querySelector("input[name=name]").value;
         let number = document.querySelector("input[name=number]").value;
         let name2 = document.querySelector("input[name=name2]").value;
         let number2 = document.querySelector("input[name=number2]").value;
 
+        // Check if it is filled in
         if (!name || !number || isNaN(number2) ) {
           var url = `http://api.foknet.nl/removenumber/${name2}+${number2}`;
-          console.log("remove")
         }
+        // Check for numbers
         else if (!name2 || !number2 || isNaN(number)) {
           var url = `http://api.foknet.nl/number/${name}+${number}`;
-          console.log("add");
         }
+        // Alert for mistakes
         else{
-          alert("Please fill in both forms and only use numbers")
+          alert("Please fill in one forms completly and only use numbers")
+          return false
         }
 
+        // Send request
         var oReq = new XMLHttpRequest();
         oReq.addEventListener('load', reqListener);
         oReq.open("get", url, true);
         oReq.send();
+
+        // Reject auto load
         return false
       }
     </script>

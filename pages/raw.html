@@ -21,6 +21,7 @@
     </head>
 
     <body>
+      <!-- Top menu and back button -->
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
             <a class="navbar-brand" href="/index.html">BACK</a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -32,19 +33,23 @@
           <p></p>
           <script type="text/javascript">
           function reqListener () {
-            // console.log(this.responseText['data'])
+            // When recieving data parse it
             var api_data = JSON.parse(this.responseText);
+
+            // Setup table elements
             var _table_ = document.createElement('table'),
             _tr_ = document.createElement('tr'),
             _th_ = document.createElement('th'),
             _td_ = document.createElement('td');
 
-          // Builds the HTML Table out of myList json data from Ivy restful service.
+          // Function that builds the HTML Table out of json data 
           function buildHtmlTable(arr) {
             var table = _table_.cloneNode(false),
               columns = addAllColumnHeaders(arr, table);
+
             for (var i = 0, maxi = arr.length; i < maxi; ++i) {
               var tr = _tr_.cloneNode(false);
+
               for (var j = 0, maxj = columns.length; j < maxj; ++j) {
                 var td = _td_.cloneNode(false);
                 cellValue = arr[i][columns[j]];
@@ -57,8 +62,6 @@
           }
 
           // Adds a header row to the table and returns the set of columns.
-          // Need to do union of keys from all records as some records may not contain
-          // all records
           function addAllColumnHeaders(arr, table) {
             var columnSet = [],
               tr = _tr_.cloneNode(false);
@@ -76,9 +79,11 @@
             return columnSet;
           }
 
+          // Execute the function to build the table
           document.body.appendChild(buildHtmlTable(api_data.data));
           }
 
+          // Send api request
           var url = "http://api.foknet.nl";
 
           var oReq = new XMLHttpRequest();

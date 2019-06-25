@@ -1,7 +1,8 @@
-import time
+
 from timeloop import Timeloop
 from datetime import timedelta
 from bs4 import BeautifulSoup
+import time
 import requests
 import datetime
 import mysql.connector
@@ -149,7 +150,7 @@ def save(e, file):
             loc = l[0].strip()
             if loc[1].isdigit():
                 loc = loc[2:]
-                
+
             price = (int(''.join([i for i in l[1] if i.isdigit()])))
             incl = (('incl' in l[2]))
 
@@ -167,7 +168,9 @@ def save(e, file):
                 lat = streetdict[street][0]
                 lon = streetdict[street][1]
             except:
+                # Self learning dictonairy
                 lat, lon = latlon_by_term(street)
+                streetdict[street] = (lat, lon)
 
             call = make_insert(mycursor,loc,
                             scrape_date+' '+file[15:-2].replace('_', ':'),

@@ -19,6 +19,7 @@
     </head>
 
     <body>
+      <!--  Top menu and back button -->
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
             <a class="navbar-brand" href="/index.html">BACK</a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -26,6 +27,7 @@
             </button>
         </nav>
 
+        <!-- Info and nice form -->
         <div class="container">
           <h4 style='padding-top:100px; padding-bottom:100px;'>
             It looks like magic, but it's a Regression model. Trained on the data from the database.
@@ -59,31 +61,38 @@
         </div>
       <script type="text/javascript">
       document.querySelector(".api_form").onsubmit = function() {
-        console.log("hi")
-
+        // Translate the given values into variables
         let lat = document.querySelector("input[name=lat]").value;
         let lon = document.querySelector("input[name=lon]").value;
         let size = document.querySelector("input[name=size]").value;
 
+        // Check for correct ness
         if (!lat || !lon || !size){
           alert("please fill in the form")
+          return false
         }
         else if((isNaN(lat)) || (isNaN(lon)) || (isNaN(size))){
           alert("please enter numbers")
+          return false
         }
 
+        // Could change this later
         let time = -1;
 
+        // Url compatibility
         let lat2 = lat.replace(".","+");
         let lon2 = lon.replace(".","+");
 
+        // Build url
         var api_call = `http://api.foknet.nl/predict/${lat2}&${lon2}&${size}&${time}`;
 
         function reqListener () {
+          // Get data and display it
           var api_data = JSON.parse(this.responseText);
-          console.log(api_data)
           document.querySelector('.price_result').innerHTML = `${Math.round(api_data.price)} euro`;
         }
+
+        // Request data
         var oReq = new XMLHttpRequest();
         oReq.addEventListener('load', reqListener);
         oReq.open("get", api_call, true);

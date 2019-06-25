@@ -24,6 +24,7 @@
     </head>
 
     <body>
+      <!-- Top menu -->
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
             <a class="navbar-brand" href="/index.html">BACK</a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -43,13 +44,17 @@
                 <option value="0">All</option>
                 <option value="1">Still avalable</option>
               </select>
+              <!-- Submit will tigger new data to load  with the above selected values-->
               <input type="submit" name="" placeholder="show">
             </form>
         </nav>
 
+        <!-- Arrangement of all the svgs -->
         <div class="all-svg">
           <div class="row">
             <div class="col-7">
+              <h6>Click, hover and explore the map. For a nice average,
+                  click the city part in dthe sunburst</h6>
               <div id="tooltip-container"></div>
               <div id="tooltip-container"></div>
               <div class="">
@@ -76,16 +81,18 @@
           </div>
         </div>
 
-
+      <!-- All scripts -->
       <script type="text/javascript" src="/static/app.js"></script>
       <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>
       <script src="http://d3js.org/topojson.v2.min.js"></script>
       <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
       <script type="text/javascript" src="../static/map.js"></script>
+      <script type="text/javascript" src="../static/dataConstant.js"> </script>
       <script type="text/javascript" src="../static/sunburst.js"> </script>
       <script type="text/javascript" src="../static/histo.js"> </script>
 
+      <!-- data footer -->
       <footer class="small text-center text-muted">
           <p>Data from <a href="https://kamernet.nl">kamernet</a>.</p>
       </footer>
