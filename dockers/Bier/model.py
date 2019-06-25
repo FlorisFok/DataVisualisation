@@ -112,9 +112,9 @@ def get_all():
 
 	for b,b2 in zip(beer_list1[1:], beer_list2[1:]):
 		try:
-			beer_list.append(int(b)+int(b2))
+			beer_list.append((int(b), int(b2)))
 		except:
-			beer_list.append(0)
+			beer_list.append((0, 0))
 
 	return mens_list[1:], beer_list
 
@@ -142,12 +142,13 @@ def update(sheet, row_num, mens, COL, new_values):
 	'''
 	Checks if cell is empty to place value, otherwise add to old value
 	'''
+	print(new_values)
 	try:
 		old_value = int(sheet.cell(row_num, COL).value)
-		sheet.update_cell(row_num, COL, int(new_values) + old_value)
+		print('old', old_value)
+		sheet.update_cell(row_num, COL, float(new_values) + old_value)
 	except:
-		null(sheet,mens,row_num)
-		sheet.update_cell(row_num, COL, int(new_values))
+		sheet.update_cell(row_num, COL, float(new_values))
 
 
 def find_mens_row(mens, sheet):
@@ -178,7 +179,7 @@ def time_stamp():
 
 def wbw():
 	pass
-	
+
 if __name__ == '__main__':
 	sheet = use_sheet()
 	set_up(sheet)

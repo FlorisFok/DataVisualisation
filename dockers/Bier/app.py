@@ -49,19 +49,28 @@ def registrants():
     mens_list, beer_list = get_all()
 
     # Transfom stats to JSON
-    i = 1
-    users = []
-    users2 = []
+    data = {
+	  "labels": [],
+	  "series": [
+	    {
+	      "label": 'Zwerver',
+	      "values": []
+	    },
+	    {
+	      "label": 'Premium',
+	      "values": []
+	    },]
+	};
     for mens, beer in zip(mens_list, beer_list):
         try:
-            users.append({"y": beer, "label": mens})
-            users2.append({"y": (beer/sum(beer_list))*100, "label": mens})
+            data["labels"].append(mens)
+            data["series"][0]['values'].append(beer[0])
+            data["series"][1]['values'].append(beer[1])
         except:
             pass
-        i += 1
 
     # Return values for JavaScript Table
-    return render_template("stats.html", users=json.dumps(users), users2=json.dumps(users2))
+    return render_template("stats.html", data=json.dumps(data))
 
 
 @app.route("/", methods=["POST"])
