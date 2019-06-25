@@ -105,7 +105,7 @@ def location(range, commands):
     '''
 
     calls = commands_parser(commands)
-    data = get_where_json(commands)
+    data = get_where_json(calls)
 
     new_data = []
     for piece in data:
