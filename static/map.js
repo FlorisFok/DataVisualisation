@@ -59,7 +59,7 @@ layer2.append("text")
   .attr("font-size", "large")
   .attr("text-decoration", "underline")
   .attr("font-weight", "bold")
-  .text("Legenda");
+  .text("Legend");
 
 layer2.append("text")
   .attr("x", width/2)
@@ -98,27 +98,27 @@ layer2.append("circle")
   .attr("class", "room")
   .attr("cx", x0 + 22)
   .attr("cy", y0 + spacingy * 1)
-  .attr("r", 3)
+  .attr("r", 5)
   .style("fill", "green");
 
 layer2.append("circle")
   .attr("class", "room_temp")
   .attr("cx", x0 + 22)
   .attr("cy", y0 + spacingy * 2)
-  .attr("r", 3)
+  .attr("r", 5)
   .style("fill", "red");
 
 layer2.append("text")
   .attr("class", "label")
   .attr("x", spacingx + 5)
   .attr("y", y0 + spacingy * 1 + 5)
-  .text("Onbepaalde tijd");
+  .text("Unlimited Time");
 
 layer2.append("text")
   .attr("class", "label")
   .attr("x", spacingx + 5)
   .attr("y", y0 + spacingy * 2 + 5)
-  .text("Tijdelijk");
+  .text("Temporary");
 
 // End of stuff
 
@@ -375,14 +375,14 @@ function new_rooms(call){
       .attr("class", "room")
       .attr("cx", x0 + 22)
       .attr("cy", y0 + spacingy * 1)
-      .attr("r", 3)
+      .attr("r", 5)
       .style("fill", "green");
 
     svgmap.append("circle")
       .attr("class", "room_temp")
       .attr("cx", x0 + 22)
       .attr("cy", y0 + spacingy * 2)
-      .attr("r", 3)
+      .attr("r", 5)
       .style("fill", "red");
 
 
