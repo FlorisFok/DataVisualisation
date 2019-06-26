@@ -3,6 +3,13 @@ An extended version of the Minor programming final project. Instead of only font
 
 This web application will help students find a room with a more useable dashboard then the boring scrolling one of kamernet self. Not only will you find a room faster, you could check history if there are sometimes better options! 
 
+# Video
+[youtube](https://www.youtube.com/watch?v=IniJDpC2hZA)
+
+# Usage
+* [visit the site](http://app.foknet.nl/)
+* run ``` python -m http.server 8080 ``` to see it at local host port 8080
+
 # Components
 * Ubuntu server running Apache2 with multiple docker containers, connected by a reversed proxy.
 * Scraper targeted at Kamernet.nl, scraping hourly. (running on the server)
